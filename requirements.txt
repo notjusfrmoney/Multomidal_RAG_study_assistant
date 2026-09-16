@@ -1,0 +1,13 @@
+fastapi
+groq
+httpx
+numpy
+Pillow
+PyMuPDF
+pytest
+python-dotenv
+pypdf
+qdrant-client
+sentence-transformers
+streamlit
+uvicorn

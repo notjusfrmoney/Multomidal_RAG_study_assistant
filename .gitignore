@@ -1,0 +1,20 @@
+# Secrets and local environment configuration
+.env
+
+# Generated data and local vector database storage
+data/
+qdrant_storage/
+
+# Python caches and test artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local virtual environments
+venv/
+env/
+.venv/
+
+# IDE configuration
+.vscode/
+.idea/
