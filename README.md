@@ -112,8 +112,9 @@ For each benchmark question, the evaluator:
 4. Generates a grounded answer using the configured Groq model.
 5. Calls Groq with a separate strict judge prompt.
 6. Scores answer correctness and groundedness from 1 to 5.
-7. Saves detailed per-question results to
-   [`data/evaluation/results.json`](data/evaluation/results.json).
+7. Saves detailed per-question results locally to
+   `data/evaluation/results.json`. Generated evaluation artifacts are ignored
+   so they are not uploaded with the public source repository.
 
 The current Chapter 1 benchmark results are:
 
@@ -177,29 +178,85 @@ hybrid lexical-plus-dense retrieval, page diversification, section-aware
 metadata filtering, and reranking. They are not included in the current
 vertical slice so that its behavior remains simple and measurable.
 
-## 6. Future Roadmap
+## 6. Service Architecture and Deployment
 
-### 1. Decouple the retrieval engine from Streamlit
+The core RAG engine is exposed through a thin FastAPI service. Streamlit acts
+as the presentation layer and sends questions to the API rather than importing
+retrieval and generation code directly.
 
-Wrap the core retrieval and generation path in a robust FastAPI backend. This
-would make the RAG engine independently testable and reusable by Streamlit,
-future web clients, or batch evaluation jobs.
+Available endpoints:
 
-### 2. Containerize and deploy
+- `GET /health` checks API and Qdrant availability.
+- `POST /query` retrieves evidence, generates a grounded answer, and returns
+  source citations.
 
-Package the application and supporting services in containers, then use
-available AWS credits for a controlled cloud deployment. The deployment should
-include secure environment-variable handling, persistent Qdrant storage, and
-basic operational monitoring.
+The project includes separate Docker images for the API and UI, coordinated by
+Docker Compose. The UI uses `API_URL=http://api:8000` inside the Compose
+network, while local non-container runs default to `http://localhost:8000`.
 
-### 3. Expand the textbook
+### Run with FastAPI and Streamlit locally
+
+Start the API:
+
+```powershell
+python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
+```
+
+In a second terminal, start the UI:
+
+```powershell
+streamlit run app\streamlit_app.py
+```
+
+### Run with Docker Compose
+
+```powershell
+docker compose up --build
+```
+
+The services are then available at:
+
+- FastAPI: `http://localhost:8000`
+- Streamlit: `http://localhost:8501`
+
+The Compose configuration loads local environment values from `.env` without
+copying that file into either image.
+
+## 7. Public Repository Safety
+
+The repository is prepared for public GitHub publication:
+
+- `.env` is ignored and must contain local secrets only.
+- `.env.example` documents variable names without secret values.
+- Generated textbook data, rendered pages, processed records, and local Qdrant
+  storage are excluded through `.gitignore`.
+- Python caches, test caches, virtual environments, and IDE settings are
+  excluded.
+
+Before publishing, verify the staged file list and scan for credentials:
+
+```powershell
+git status --short
+git ls-files
+```
+
+Never commit API keys, Qdrant credentials, downloaded textbook artifacts, or
+local database files.
+
+## 8. Future Roadmap
+
+### 1. Container deployment
+
+Use available AWS credits for a controlled cloud deployment with secure secret
+management, persistent Qdrant storage, health checks, and basic monitoring.
+
+### 2. Expand the textbook
 
 Extend the current Chapter 1 vertical slice to the remaining seven Physics
-chapters. The ingestion process is already designed to preserve document,
-page, source-file, and record-type metadata so the expanded collection can be
-rebuilt deterministically.
+chapters. The ingestion process preserves document, page, source-file, and
+record-type metadata so the expanded collection can be rebuilt deterministically.
 
-### 4. Improve retrieval based on measured failures
+### 3. Improve retrieval based on measured failures
 
 Use the current failure report to evaluate:
 
@@ -212,17 +269,15 @@ Use the current failure report to evaluate:
 The goal is not to obscure the current metric, but to show measurable progress
 against the exact failure modes identified in the Chapter 1 benchmark.
 
-## 7. Project Structure
+## 9. Project Structure
 
 ```text
 MultiModal_RAG/
+├── api/
+│   └── main.py                   # FastAPI backend
 ├── app/
 │   └── streamlit_app.py          # Student-facing UI
-├── data/
-│   ├── evaluation/              # Benchmark and evaluation reports
-│   ├── pages/                   # Rendered textbook pages
-│   ├── processed/               # Records and visual metadata
-│   └── raw/                     # Source textbook PDFs
+├── data/                         # Local, ignored textbook artifacts
 ├── scripts/
 │   ├── evaluate.py              # Retrieval and generation evaluation
 │   ├── index.py                 # Qdrant indexing
@@ -232,12 +287,16 @@ MultiModal_RAG/
 │   └── study_assistant/         # Core RAG modules
 ├── tests/
 │   └── test_core.py             # Deterministic unit tests
+├── Dockerfile.api
+├── Dockerfile.ui
+├── docker-compose.yml
 ├── .env.example
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-## 8. Setup and Usage
+## 10. Setup and Usage
 
 ### Install dependencies
 
@@ -279,8 +338,22 @@ python scripts\index.py
 
 ### Start the application
 
+For the service-oriented local setup, start FastAPI first:
+
+```powershell
+python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
+```
+
+Then start Streamlit in a second terminal:
+
 ```powershell
 streamlit run app\streamlit_app.py
+```
+
+Alternatively, launch both services with Docker Compose:
+
+```powershell
+docker compose up --build
 ```
 
 ### Run tests
@@ -289,7 +362,7 @@ streamlit run app\streamlit_app.py
 python -m pytest -q
 ```
 
-## 9. Limitations
+## 11. Limitations
 
 - The current benchmark covers Chapter 1 and is intentionally small.
 - Recall is measured against expected page numbers, so semantically useful
