@@ -7,10 +7,10 @@
 
 ## 2. Executive Summary
 
-The Multimodal CBSE Study Assistant is a textbook-grounded question-answering
-system for Class 12 Physics. It retrieves and reasons over educational
-material that contains both written explanations and complex visual content,
-including diagrams, graphs, equations, tables, and labeled textbook figures.
+The Multimodal CBSE Study Assistant is a textbook-grounded conversational
+agent for Class 12 Physics. It retrieves and reasons over educational material
+that contains both written explanations and complex visual content, including
+diagrams, graphs, equations, tables, and labeled textbook figures.
 
 Instead of treating a textbook as text alone, the system represents both
 page-level visual evidence and extracted text in a shared retrieval pipeline.
@@ -21,50 +21,76 @@ A student receives:
 - The relevant full textbook page images for visual inspection.
 
 The generation prompt treats retrieved textbook evidence as the factual
-boundary for textbook-specific claims. This makes unsupported claims visible,
-encourages the model to acknowledge insufficient evidence, and provides a
-practical safeguard against hallucinated page references or explanations.
+boundary for textbook-specific claims. Evidence assessment, bounded retry, and
+an honest insufficient-evidence response help prevent unsupported textbook
+answers. Conversational routing and follow-up rewriting allow the same system
+to support both study dialogue and textbook-grounded questions.
 
 ## 3. Architecture & Tech Stack
 
 ### End-to-end pipeline
 
 ```text
+Student
+   |
+   v
+Streamlit chat UI
+   |
+   v
+FastAPI /query
+   |
+   v
+Deterministic obvious-casual routing
+   |
+   v
+LLM query router
+   |
+   v
+Conversation-aware query rewriting
+   |
+   v
+Optional query decomposition
+   |
+   v
+Multimodal Qdrant retrieval
+   |
+   v
+Evidence assessment
+   |
+   v
+Bounded retrieval retry
+   |
+   v
+Deterministic calculator when applicable
+   |
+   v
+Grounded Groq generation
+   |
+   v
+Answer + citations + relevant textbook page images
+```
+
+The ingestion and indexing path produces the multimodal evidence used by the
+agent:
+
+```text
 Raw textbook PDFs
         |
-        v
-PDF page-text extraction with pypdf
+        +--> Page text extraction, cleaning, and page-aware chunking
         |
-        +------------------------------+
-        |                              |
-        v                              v
-Text cleaning and page-aware       Full-page rendering
-semantic chunking                  with PyMuPDF
-        |                              |
-        |                              v
-        |                       VLM page descriptions
-        |                       for diagrams, equations,
-        |                       labels, and tables
-        |                              |
-        +--------------+---------------+
-                       v
-             Text and page records
-                       |
-                       v
-       Normalized BGE-base embeddings
-                       |
-                       v
-          Qdrant batched UUID upserts
-                       |
-                       v
-              Multimodal retrieval
-                       |
-                       v
-          Grounded Groq answer generation
-                       |
-                       v
-        Streamlit answer, citations,
-              and full page images
+        +--> Full-page rendering with PyMuPDF
+                    |
+                    +--> VLM descriptions for diagrams, equations,
+                         tables, labels, and other visual evidence
+        |
+        v
+Text and page records
+        |
+        v
+Normalized BGE embeddings
+        |
+        v
+Qdrant collection
 ```
 
 ### Technology choices
@@ -84,6 +110,46 @@ semantic chunking                  with PyMuPDF
   citations, and relevant textbook pages.
 - **Provider configuration:** Groq and Qdrant credentials are loaded from
   environment variables. Secrets are not stored in source code.
+
+### Implemented capabilities
+
+#### Multimodal RAG
+
+- Page-level text extraction.
+- Text cleaning and page-aware chunking.
+- Full-page rendering with PyMuPDF.
+- VLM-generated page descriptions for diagrams, equations, and tables.
+- Text and page records with page metadata.
+- BGE embeddings and Qdrant retrieval.
+- Grounded answer generation.
+- Page and source citations.
+- Relevant full-textbook-page images in the Streamlit chat.
+
+#### Agentic layer
+
+- Deterministic handling of obvious standalone greetings and acknowledgements.
+- LLM-based query routing.
+- Supported intents: `casual_chat`, `textbook_question`,
+  `follow_up_question`, `calculation`, and `study_guidance`.
+- Conversation-aware follow-up query rewriting.
+- Query decomposition for multi-concept questions.
+- Bounded retrieval attempts with lightweight evidence-quality assessment.
+- Safe insufficient-evidence responses when usable textbook evidence is not
+  found.
+- An orchestration layer that separates application workflow from API
+  transport.
+
+#### Deterministic numerical tool
+
+The current calculator intentionally supports one operation:
+
+- Electric field due to a point charge using `E = k|q| / r²`.
+- Charge units: `C`, `mC`, `μC`, `µC`, `uC`, and `nC`.
+- Distance units: `m`, `cm`, and `km`.
+- Deterministic Python arithmetic rather than arbitrary code execution.
+- Safe failure for missing or invalid inputs.
+
+It does not claim to support arbitrary Physics formulas.
 
 ### Engineering philosophy
 
@@ -134,6 +200,44 @@ Run the evaluation with:
 python -m scripts.evaluate
 ```
 
+The practical agentic evaluation uses the richer 24-case benchmark in
+[`evaluation/benchmark.json`](evaluation/benchmark.json). It covers direct
+textbook questions, follow-ups, multi-concept questions, casual conversation,
+study guidance, numerical requests, visual questions, and insufficient
+evidence. The evaluator implements:
+
+- Intent Accuracy
+- Retrieval Decision Accuracy
+- Unnecessary Retrieval Rate
+- Hit@3 and Hit@5
+- Recall@3 and Recall@5
+- Follow-up Resolution Accuracy
+- Contextual Retrieval Success
+- Decomposition Decision Accuracy
+- Concept Coverage
+- Answer Correctness
+- Groundedness
+- Citation Accuracy
+- Calculation Accuracy
+- Unsupported Answer Rate
+- End-to-End Success Rate
+
+```powershell
+python -m scripts.evaluate_agentic
+```
+
+The agentic evaluator requires usable Groq quota for routing, answer
+generation, and optional judging. It writes detailed results to the ignored
+path `data/evaluation/agentic_results.json`.
+
+The evaluation framework is implemented and locally validated with **29
+passing tests**. The evaluator was successfully executed, and a small
+evaluator bug was fixed during the live run. Live end-to-end quality metrics
+are pending completion of the benchmark run because the configured Groq
+service reached its daily token quota. The evaluation framework itself is
+implemented and locally validated. This is an external provider-quota
+limitation, not a change to the application architecture or benchmark.
+
 ## 5. Failure Analysis: The Engineering Highlight
 
 The **40% Recall@5** result is not simply a product failure. It exposes a
@@ -173,10 +277,11 @@ but it did not retrieve either expected page 18 or page 24 within the top five.
 The query's combined meaning was effectively placed between multiple regions
 of the latent space rather than producing two deliberate evidence searches.
 
-These observations motivate future techniques such as query decomposition,
-hybrid lexical-plus-dense retrieval, page diversification, section-aware
-metadata filtering, and reranking. They are not included in the current
-vertical slice so that its behavior remains simple and measurable.
+These observations motivate future techniques such as hybrid
+lexical-plus-dense retrieval, page diversification, section-aware metadata
+filtering, and reranking. Query decomposition is already implemented in the
+current agentic layer; these additional retrieval improvements remain outside
+the current vertical slice so that its behavior stays measurable.
 
 ## 6. Service Architecture and Deployment
 
@@ -187,8 +292,9 @@ retrieval and generation code directly.
 Available endpoints:
 
 - `GET /health` checks API and Qdrant availability.
-- `POST /query` retrieves evidence, generates a grounded answer, and returns
-  source citations.
+- `POST /query` routes the conversation, optionally retrieves evidence,
+  generates either a conversational or grounded answer, and returns
+  operational metadata, source citations, and page references.
 
 The project includes separate Docker images for the API and UI, coordinated by
 Docker Compose. The UI uses `API_URL=http://api:8000` inside the Compose
@@ -261,10 +367,10 @@ record-type metadata so the expanded collection can be rebuilt deterministically
 Use the current failure report to evaluate:
 
 - Hybrid sparse and dense retrieval.
-- Query decomposition for comparative and multi-hop questions.
 - Reranking of candidate pages.
 - Section and chapter metadata filters.
 - Page-level diversification.
+- More robust evaluation of multi-concept decomposition and evidence quality.
 
 The goal is not to obscure the current metric, but to show measurable progress
 against the exact failure modes identified in the Chapter 1 benchmark.
@@ -280,13 +386,18 @@ MultiModal_RAG/
 ├── data/                         # Local, ignored textbook artifacts
 ├── scripts/
 │   ├── evaluate.py              # Retrieval and generation evaluation
+│   ├── evaluate_agentic.py      # Agentic evaluation runner
+│   ├── evaluation_metrics.py    # Agentic evaluation metrics
 │   ├── index.py                 # Qdrant indexing
 │   ├── ingest.py                # PDF ingestion
 │   └── smoke_test.py            # One-chapter vertical slice
 ├── src/
-│   └── study_assistant/         # Core RAG modules
+│   └── study_assistant/         # RAG, agent, orchestration, and calculator
 ├── tests/
-│   └── test_core.py             # Deterministic unit tests
+│   ├── test_core.py             # Core deterministic tests
+│   ├── test_agent.py            # Agent and orchestration tests
+│   ├── test_calculator.py       # Calculator tests
+│   └── test_evaluation.py       # Evaluation metric tests
 ├── Dockerfile.api
 ├── Dockerfile.ui
 ├── docker-compose.yml
