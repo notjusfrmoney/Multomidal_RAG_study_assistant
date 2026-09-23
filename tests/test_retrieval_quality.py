@@ -1,4 +1,8 @@
+from types import SimpleNamespace
+
+import src.study_assistant.retrieval as retrieval
 from src.study_assistant.orchestrator import _merge_records
+from src.study_assistant.retrieval import rerank_results
 from src.study_assistant.store import SearchResult
 
 
@@ -48,3 +52,76 @@ def test_merge_deduplicates_and_keeps_stronger_duplicate():
 def test_merge_is_bounded_by_limit():
     merged = _merge_records([_records("A", 3), _records("B", 3)], limit=4)
     assert [record.source_id for record in merged] == ["A1", "B1", "A2", "B2"]
+
+
+def test_reranking_promotes_strong_keyword_overlap():
+    records = [
+        SearchResult("semantic", "text", 0.90, "electric field and charge", 1, 1),
+        SearchResult("keyword", "text", 0.80, "electric flux electric flux", 2, 2),
+    ]
+    reranked = rerank_results("electric flux", records, 2)
+    assert [record.source_id for record in reranked] == ["keyword", "semantic"]
+
+
+def test_reranking_keeps_semantic_score_dominant():
+    records = [
+        SearchResult("semantic", "text", 0.95, "related material", 1, 1),
+        SearchResult("keyword", "text", 0.60, "electric flux", 2, 2),
+    ]
+    reranked = rerank_results("electric flux", records, 2)
+    assert [record.source_id for record in reranked] == ["semantic", "keyword"]
+
+
+def test_reranking_handles_empty_or_malformed_text_and_preserves_metadata():
+    records = [
+        SearchResult(
+            "page-1",
+            "page",
+            0.8,
+            None,
+            12,
+            13,
+            page_image="data/pages/page-1.png",
+            source_file="chapter.pdf",
+        ),
+        SearchResult("text-2", "text", 0.7, "electric field", 14, 14),
+    ]
+    reranked = rerank_results("electric field", records, 1)
+    assert len(reranked) == 1
+    assert reranked[0].source_id == "text-2"
+    assert reranked[0].record_type == "text"
+    assert reranked[0].page_start == 14
+    assert reranked[0].source_file == ""
+
+
+def test_search_uses_bounded_candidate_pool_before_reranking(monkeypatch):
+    points = [
+        SimpleNamespace(
+            id=str(index),
+            score=0.9 - index / 100,
+            payload={
+                "record_type": "page",
+                "text": "electric field",
+                "page_start": index,
+                "page_end": index,
+                "page_image": f"page-{index}.png",
+                "source_file": "chapter.pdf",
+            },
+        )
+        for index in range(1, 11)
+    ]
+
+    class Client:
+        def __init__(self):
+            self.limit = None
+
+        def query_points(self, **kwargs):
+            self.limit = kwargs["limit"]
+            return SimpleNamespace(points=points)
+
+    monkeypatch.setattr(retrieval, "embed_texts", lambda texts, model: [[0.1]])
+    client = Client()
+    results = retrieval.search(client, "collection", "electric field", "model", top_k=5)
+
+    assert client.limit == 10
+    assert len(results) == 5
