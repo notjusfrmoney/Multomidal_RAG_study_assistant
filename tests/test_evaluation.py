@@ -2,6 +2,7 @@ from pathlib import Path
 
 from scripts.evaluate_agentic import load_benchmark
 from scripts.evaluation_metrics import (
+    abstention_success,
     category_summary,
     citation_accuracy,
     concept_coverage,
@@ -73,6 +74,12 @@ def test_citation_accuracy_accepts_common_page_formats():
     ]
     for citation in formats:
         assert citation_accuracy(citation, [38]) == 1
+
+
+def test_abstention_success_is_scoped_to_insufficient_evidence_cases():
+    assert abstention_success("The evidence is insufficient to answer.", True) is True
+    assert abstention_success("Here is the answer.", True) is False
+    assert abstention_success("The evidence is insufficient.", False) is None
 
 
 def test_reconciled_benchmark_provenance_points_to_verified_chunks():

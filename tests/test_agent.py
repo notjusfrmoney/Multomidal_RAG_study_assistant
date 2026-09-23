@@ -99,6 +99,7 @@ def test_casual_orchestration_skips_qdrant():
     qdrant.assert_not_called()
     assert result["used_retrieval"] is False
     assert result["sources"] == []
+    assert isinstance(result["debug"]["total_latency_ms"], float)
 
 
 def test_textbook_orchestration_uses_retrieval_and_generation():

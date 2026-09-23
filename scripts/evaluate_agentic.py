@@ -16,6 +16,7 @@ from scripts.evaluation_metrics import (
     mean,
     page_numbers,
     recall_at_k,
+    abstention_success,
 )
 
 
@@ -81,7 +82,7 @@ def _success(item: dict, result: dict, metrics: dict) -> bool:
     if category in {"casual", "study_guidance"}:
         return metrics["intent_correct"] and not result["system"]["used_retrieval"]
     if category == "insufficient_evidence":
-        return not metrics["unsupported_answer"]
+        return metrics["abstention_success"] is True
     if category == "numerical":
         return metrics["intent_correct"] and metrics["calculation_correct"] is True
     if category == "follow_up":
@@ -144,7 +145,7 @@ def _transient_failure_result(item: dict, error: str, started: float) -> dict:
             "intent_correct": None,
             "retrieval_success": None,
             "calculation_correct": None,
-            "unsupported_answer": None,
+            "abstention_success": None,
         },
         "overall": {"success": False},
     }
@@ -206,8 +207,10 @@ def evaluate() -> list[dict]:
             "citation_accuracy": citation_accuracy(output["answer"], list(expected_pages)),
             "correctness": scores["correctness"],
             "groundedness": scores["groundedness"],
-            "unsupported_answer": item["category"] == "insufficient_evidence"
-            and debug.get("evidence_sufficient") is not False,
+            "abstention_success": abstention_success(
+                output["answer"],
+                item["category"] == "insufficient_evidence",
+            ),
         }
         result = {
             "id": item["id"],
@@ -302,7 +305,14 @@ def report(results: list[dict]) -> None:
     cited = [item["answer"]["citation_accuracy"] for item in results if item["answer"]["citation_accuracy"] is not None]
     print(f"Citation Accuracy: {mean(cited) * 100 if cited else 0:.1f}%")
     print(f"Calculation Accuracy: {mean([int(item['metrics']['calculation_correct']) for item in numerical if item['metrics']['calculation_correct'] is not None]) * 100 if numerical else 0:.1f}%")
-    print(f"Unsupported Answer Rate: {mean([int(item['metrics']['unsupported_answer']) for item in insufficient]) * 100 if insufficient else 0:.1f}%")
+    abstention_rate = (
+        mean([int(item["metrics"]["abstention_success"]) for item in insufficient]) * 100
+        if insufficient
+        else 0
+    )
+    print(
+        f"Unsupported-query abstention success: {abstention_rate:.1f}%"
+    )
     print(f"End-to-End Success Rate: {mean([int(item['overall']['success']) for item in results]) * 100:.1f}%")
     print("\nCategory                  Cases     Success")
     for category, values in category_summary(results).items():

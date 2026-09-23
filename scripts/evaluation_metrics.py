@@ -61,6 +61,15 @@ def citation_accuracy(answer: str, expected_pages: list[int]) -> int | None:
     return int(bool(cited_pages & set(expected_pages)))
 
 
+def abstention_success(answer: str, expected_insufficient: bool) -> bool | None:
+    if not expected_insufficient:
+        return None
+    normalized = answer.lower()
+    return "insufficient" in normalized and (
+        "evidence" in normalized or "information" in normalized
+    )
+
+
 def mean(values: list[float | int]) -> float | None:
     return sum(values) / len(values) if values else None
 

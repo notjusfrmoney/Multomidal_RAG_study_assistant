@@ -1,3 +1,4 @@
+import time
 from typing import Any
 
 from .agent import analyze_query, decompose_query, rewrite_query
@@ -10,6 +11,11 @@ from .store import qdrant_client
 
 
 MAX_RETRIEVAL_ATTEMPTS = 2
+
+
+def _with_latency(debug: dict[str, Any], started: float) -> dict[str, Any]:
+    debug["total_latency_ms"] = round((time.perf_counter() - started) * 1000, 2)
+    return debug
 
 
 def assess_evidence(records: list[Any] | None, query: str) -> dict[str, Any]:
@@ -146,6 +152,7 @@ def process_student_query(
     chat_history: list[dict],
     chapter: str | None = None,
 ) -> dict[str, Any]:
+    started = time.perf_counter()
     route = analyze_query(question, chat_history)
     intent = route["intent"]
     if not route["needs_retrieval"]:
@@ -154,11 +161,11 @@ def process_student_query(
             "intent": intent,
             "used_retrieval": False,
             "sources": [],
-            "debug": {
+            "debug": _with_latency({
                 "standalone_query": route["standalone_query"],
                 "retrieval_attempts": 0,
                 "calculation_used": False,
-            },
+            }, started),
         }
 
     standalone_query = route["standalone_query"]
@@ -217,7 +224,7 @@ def process_student_query(
                 "intent": intent,
                 "used_retrieval": True,
                 "sources": results,
-                "debug": {
+                "debug": _with_latency({
                     "standalone_query": standalone_query,
                     "decomposed": decomposed,
                     "subqueries": subqueries,
@@ -226,7 +233,7 @@ def process_student_query(
                     "evidence_sufficient": True,
                     "calculation_used": calculation_used,
                     **({"calculation_error": calculation_error} if calculation_error else {}),
-                },
+                }, started),
             }
         if retrieval_attempts < MAX_RETRIEVAL_ATTEMPTS:
             standalone_query = _retry_query(standalone_query)
@@ -240,7 +247,7 @@ def process_student_query(
         "intent": intent,
         "used_retrieval": True,
         "sources": [],
-        "debug": {
+        "debug": _with_latency({
             "standalone_query": standalone_query,
             "decomposed": decomposed,
             "subqueries": subqueries,
@@ -248,5 +255,5 @@ def process_student_query(
             "retrieval_attempts": retrieval_attempts,
             "evidence_sufficient": False,
             "calculation_used": False,
-        },
+        }, started),
     }

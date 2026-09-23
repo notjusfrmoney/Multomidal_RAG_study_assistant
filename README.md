@@ -284,28 +284,92 @@ Run the agentic evaluation:
 python -m scripts.evaluate_agentic
 ```
 
+### Evaluation methodology
+
+The agentic evaluator uses a **custom repository-local evaluation harness**;
+it does not use RAGAS or DeepEval:
+
+```text
+24 benchmark cases
+        ↓
+run routing, retrieval, orchestration, and answer generation
+        ↓
+retrieval and citation checks
+        ↓
+agentic behavior checks
+        ↓
+answer scoring where a reference answer exists
+        ↓
+aggregate metrics
+```
+
+Retrieval metrics use the cases with expected source pages (13 cases in the
+stored run). Recall@k is the fraction of expected pages found in the first k
+retrieved pages; Hit@k records whether at least one expected page appears in
+the first k. Citation Accuracy uses the same 13 cases and checks whether the
+answer cites an expected page. Follow-up Resolution and Contextual Retrieval
+Success use the 3 follow-up cases. Decomposition Decision Accuracy and
+Concept Coverage use the multi-concept cases.
+
+Correctness and Groundedness are LLM-judge scores from 1 to 5, averaged only
+for the 8 cases in the stored run that contain a reference answer. They are
+not scores for all 24 cases. End-to-End Success is a case-level boolean over
+all 24 cases and includes routing, retrieval, abstention, calculation,
+decomposition, answer, and citation requirements where applicable.
+
 The latest completed 24-case agentic run produced:
 
-| Metric | Result |
-|---|---:|
-| Recall@3 | 53.8% |
-| Recall@5 | 69.2% |
-| Hit@3 | 61.5% |
-| Hit@5 | 69.2% |
-| Citation Accuracy | 69.2% |
-| Follow-up Resolution | 100.0% |
-| Contextual Retrieval Success | 100.0% |
-| Decomposition Decision Accuracy | 100.0% |
-| Concept Coverage | 100.0% |
-| Average Correctness | 5.00 / 5 |
-| Average Groundedness | 5.00 / 5 |
-| Calculation Accuracy | 100.0% |
-| Unsupported Answer Rate | 100.0% |
-| End-to-End Success Rate | 70.8% |
+| Metric | Result | Evaluation scope |
+|---|---:|---|
+| Recall@3 | 53.8% | 13 cases with expected source pages |
+| Recall@5 | 69.2% | 13 cases with expected source pages |
+| Hit@3 | 61.5% | 13 cases with expected source pages |
+| Hit@5 | 69.2% | 13 cases with expected source pages |
+| Citation Accuracy | 69.2% | 13 cases with expected source pages |
+| Follow-up Resolution | 100.0% | 3 follow-up cases |
+| Contextual Retrieval Success | 100.0% | 3 follow-up cases |
+| Decomposition Decision Accuracy | 100.0% | Multi-concept cases |
+| Concept Coverage | 100.0% | Multi-concept cases |
+| Answer Correctness | 5.00 / 5 | 8 cases with reference answers; LLM judge |
+| Answer Groundedness | 5.00 / 5 | 8 cases with reference answers; LLM judge |
+| Calculation Accuracy | 100.0% | Numerical cases with expected results |
+| Unsupported-query abstention success | 100.0% | 3 insufficient-evidence cases; recomputed offline |
+| End-to-End Success Rate | 83.3% | 20/24 cases; recomputed offline |
+
+Unsupported-query abstention success means that, for an insufficient-evidence
+case, the generated answer explicitly states that the available evidence is
+insufficient. Its denominator is the 3 insufficient-evidence cases; it is not
+an unsupported-answer rate.
+
+The retrieval, citation, follow-up, decomposition, calculation, and LLM-judge
+values above are directly reusable from the stored 24-case benchmark run.
+Abstention success and End-to-End Success were recomputed offline from those
+same stored outputs using the corrected evaluator logic; no model or retrieval
+calls were made. A fresh live evaluation is still required to measure the
+current retrieval implementation, including the recent lightweight reranking
+change.
 
 These are local evaluation results for the current Chapter 1 benchmark, not
-claims about the entire CBSE curriculum. Detailed reports are written to
+claims about the entire CBSE curriculum. The benchmark has 24 structured
+cases, which is useful for validating the current implementation but is too
+small for statistically robust production-level estimates. A larger benchmark
+would be needed for stronger confidence. Detailed reports are written to
 `data/evaluation/results.json` and `data/evaluation/agentic_results.json`.
+
+Each online query now records `total_latency_ms` in the orchestrator debug
+payload using Python's standard `time.perf_counter()`. The stored benchmark
+artifact also contains per-case `latency_ms`, but those values include the
+configured live evaluation path and should not be treated as portable
+performance guarantees.
+
+### Evaluation limitations
+
+- The benchmark covers one Class 12 Physics chapter and 24 structured cases.
+- Stored results are a snapshot of one configured run.
+- Correctness and groundedness use an LLM judge, not human evaluation.
+- Latency depends on Groq, Qdrant, network conditions, and local configuration.
+- A broader multi-chapter benchmark and repeated live runs would be needed
+  for stronger statistical confidence.
 
 ## Tests
 
@@ -318,7 +382,7 @@ The test suite covers:
 - Evaluation metrics and benchmark provenance
 - Diversified merge ordering, bounds, and deduplication
 
-The current local suite has **38 passing tests**.
+The current local suite has **43 passing tests**.
 
 ## Project Structure
 
