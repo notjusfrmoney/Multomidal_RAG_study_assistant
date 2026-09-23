@@ -6,9 +6,14 @@ from scripts.evaluation_metrics import (
     category_summary,
     citation_accuracy,
     concept_coverage,
+    failure_rate,
     follow_up_resolution,
     hit_at_k,
+    latency_summary,
+    ndcg_at_k,
+    precision_at_k,
     recall_at_k,
+    reciprocal_rank,
 )
 
 
@@ -37,6 +42,37 @@ def test_retrieval_hit_and_recall_support_multiple_pages():
     assert hit_at_k(pages, [18, 24], 3) is True
     assert recall_at_k(pages, [18, 24], 3) == 1.0
     assert recall_at_k(pages, [18, 24], 2) == 0.5
+
+
+def test_page_level_precision_deduplicates_pages_and_handles_short_results():
+    assert precision_at_k([18, 18, 25], [18, 24], 3) == 1 / 3
+    assert hit_at_k([18, 18, 24], [24], 2) is False
+    assert precision_at_k([18], [18], 5) == 1 / 5
+    assert precision_at_k([], [], 5) is None
+
+
+def test_mrr_and_ndcg_use_unique_page_ranks():
+    assert reciprocal_rank([99, 18, 18], [18]) == 0.5
+    assert reciprocal_rank([99, 100], [18]) == 0.0
+    assert ndcg_at_k([18, 24], [18, 24], 5) == 1.0
+    assert ndcg_at_k([], [18], 5) == 0.0
+    assert ndcg_at_k([], [], 5) is None
+
+
+def test_latency_summary_and_failure_rate():
+    results = [
+        {"system": {"latency_ms": 10, "error": None}},
+        {"system": {"latency_ms": 20, "error": "timeout"}},
+        {"system": {"latency_ms": 30, "error": None}},
+    ]
+    summary = latency_summary(results)
+    assert summary["count"] == 3
+    assert summary["mean_ms"] == 20
+    assert summary["median_ms"] == 20
+    assert summary["p95_ms"] == 30
+    assert summary["min_ms"] == 10
+    assert summary["max_ms"] == 30
+    assert failure_rate(results) == 1 / 3
 
 
 def test_follow_up_resolution_uses_meaning_not_exact_text():

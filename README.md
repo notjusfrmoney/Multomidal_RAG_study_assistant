@@ -70,7 +70,8 @@ Study Assistant Orchestrator
 Independent text/page searches
    |
    v
-Round-robin merge and deduplication
+Bounded candidate pool, lightweight reranking,
+round-robin merge and deduplication
    |
    v
 Qdrant collection
@@ -126,11 +127,15 @@ figures into separate image records.
 8. Route the student's message into an implemented intent.
 9. Rewrite follow-ups and decompose multi-concept questions when needed.
 10. Retrieve the configured top-k records for each search query.
-11. Merge decomposed results round-robin, remove duplicates, and assess evidence.
-12. Retry retrieval once with a normalized textbook-context suffix if evidence
+11. Retrieve a bounded candidate pool slightly larger than top-k, then apply
+    lightweight reranking using dense similarity plus lexical query-token
+    overlap; dense similarity remains dominant and original provenance is
+    preserved.
+12. Merge decomposed results round-robin, remove duplicates, and assess evidence.
+13. Retry retrieval once with a normalized textbook-context suffix if evidence
     is unusable.
-13. Generate a grounded response or return an insufficient-evidence response.
-14. Return source metadata and page images through the API/UI.
+14. Generate a grounded response or return an insufficient-evidence response.
+15. Return source metadata and page images through the API/UI.
 
 ## Agentic Query Handling
 
@@ -187,6 +192,11 @@ paragraph.
 The current system uses full textbook page images, not cropped figure
 retrieval. The Streamlit UI displays returned page images when they are
 available locally.
+
+After dense Qdrant retrieval, the system reranks a small bounded candidate pool
+with the existing semantic score and lightweight lexical query-token overlap;
+semantic similarity remains dominant and source/page provenance is preserved.
+This is not BM25 or a separate reranker model.
 
 ## Numerical Questions
 
@@ -304,50 +314,71 @@ aggregate metrics
 ```
 
 Retrieval metrics use the cases with expected source pages (13 cases in the
-stored run). Recall@k is the fraction of expected pages found in the first k
-retrieved pages; Hit@k records whether at least one expected page appears in
-the first k. Citation Accuracy uses the same 13 cases and checks whether the
-answer cites an expected page. Follow-up Resolution and Contextual Retrieval
-Success use the 3 follow-up cases. Decomposition Decision Accuracy and
-Concept Coverage use the multi-concept cases.
+current run) at page-level granularity. Duplicate records from one page count
+once. Precision@k uses relevant unique pages in the first k divided by k;
+Recall@k divides by the number of expected pages; Hit@k checks whether any
+expected page appears. MRR is reciprocal rank of the first relevant unique
+page, and nDCG@5 uses binary page relevance and unique-page ranks. Context
+Precision and Context Recall are explicitly labeled page-level context
+proxies, not semantic context judgments. Citation Accuracy checks whether an
+expected page is cited. Follow-up Resolution and Contextual Retrieval Success
+use the 3 follow-up cases.
 
 Correctness and Groundedness are LLM-judge scores from 1 to 5, averaged only
-for the 8 cases in the stored run that contain a reference answer. They are
+for the 8 completed cases in the current run that contain a reference answer. They are
 not scores for all 24 cases. End-to-End Success is a case-level boolean over
 all 24 cases and includes routing, retrieval, abstention, calculation,
 decomposition, answer, and citation requirements where applicable.
 
-The latest completed 24-case agentic run produced:
+The current custom harness reports the following values from the latest live
+run using the current code. The artifact contains 24 records: 21 completed
+cases and 3 unavailable cases after Groq rate-limit failures. Values are not
+filled for unavailable cases.
 
-| Metric | Result | Evaluation scope |
-|---|---:|---|
-| Recall@3 | 53.8% | 13 cases with expected source pages |
-| Recall@5 | 69.2% | 13 cases with expected source pages |
-| Hit@3 | 61.5% | 13 cases with expected source pages |
-| Hit@5 | 69.2% | 13 cases with expected source pages |
-| Citation Accuracy | 69.2% | 13 cases with expected source pages |
-| Follow-up Resolution | 100.0% | 3 follow-up cases |
-| Contextual Retrieval Success | 100.0% | 3 follow-up cases |
-| Decomposition Decision Accuracy | 100.0% | Multi-concept cases |
-| Concept Coverage | 100.0% | Multi-concept cases |
-| Answer Correctness | 5.00 / 5 | 8 cases with reference answers; LLM judge |
-| Answer Groundedness | 5.00 / 5 | 8 cases with reference answers; LLM judge |
-| Calculation Accuracy | 100.0% | Numerical cases with expected results |
-| Unsupported-query abstention success | 100.0% | 3 insufficient-evidence cases; recomputed offline |
-| End-to-End Success Rate | 83.3% | 20/24 cases; recomputed offline |
+| Category | Metric | Result | Scope |
+|---|---|---:|---|
+| Retrieval | Precision@3 | 20.5% | 13 page-grounded cases; current run |
+| Retrieval | Precision@5 | 16.9% | 13 page-grounded cases; current run |
+| Retrieval | Recall@3 | 50.0% | 13 page-grounded cases; current run |
+| Retrieval | Recall@5 | 69.2% | 13 page-grounded cases; current run |
+| Retrieval | Hit@3 | 53.8% | 13 page-grounded cases; current run |
+| Retrieval | Hit@5 | 69.2% | 13 page-grounded cases; current run |
+| Retrieval | MRR | 46.2% | 13 page-grounded cases; current run |
+| Retrieval | nDCG@5 | 52.4% | 13 page-grounded cases; current run |
+| RAG Context | Context Precision | 16.9% | 13 page-level context proxies; current run |
+| RAG Context | Context Recall | 69.2% | 13 page-level context proxies; current run |
+| RAG Context | Context Relevancy | 5.00 / 5 | 8 completed LLM-judge cases |
+| Generation | Answer Correctness | 5.00 / 5 | 8 completed reference-answer cases; LLM judge |
+| Generation | Faithfulness / Groundedness | 5.00 / 5 | 8 completed reference-answer cases; LLM judge |
+| Generation | Answer Relevancy | 5.00 / 5 | 8 completed LLM-judge cases |
+| Citation | Citation Accuracy | 61.5% | 13 expected-page cases; current run |
+| Citation | Citation Completeness | 5.00 / 5 | 8 completed LLM-judge cases |
+| Agent | Intent Accuracy | 95.2% | 21 completed cases; current run |
+| Agent | Follow-up Resolution | 100.0% | 3 follow-up cases; current run |
+| Agent | Decomposition Decision Accuracy | 100.0% | 2 multi-concept cases; current run |
+| Agent | Concept Coverage | 100.0% | 2 multi-concept cases; current run |
+| Agent | Calculation Accuracy | 100.0% | 2 completed numerical cases |
+| Agent | Unsupported-query Abstention Success | unavailable | All 3 insufficient-evidence cases hit rate limits |
+| Agent | End-to-End Success | 70.8% | 17/24 records; unavailable cases count as unsuccessful |
+| Multimodal | Visual Page Retrieval Hit@5 | 83.3% | 6 visual-evidence cases; current run |
+| Multimodal | Visual Evidence Groundedness | 5.00 / 5 | 3 visual cases; LLM judge |
+| System | Mean latency | 28.08 s | 24 current-run records |
+| System | Median latency | 26.08 s | 24 current-run records |
+| System | P95 latency | 59.78 s | 24 current-run records |
+| System | Min / Max latency | 0.76 / 61.65 s | 24 current-run records |
+| System | Query failure rate | 12.5% | 3/24 rate-limit failures |
 
 Unsupported-query abstention success means that, for an insufficient-evidence
 case, the generated answer explicitly states that the available evidence is
 insufficient. Its denominator is the 3 insufficient-evidence cases; it is not
 an unsupported-answer rate.
 
-The retrieval, citation, follow-up, decomposition, calculation, and LLM-judge
-values above are directly reusable from the stored 24-case benchmark run.
-Abstention success and End-to-End Success were recomputed offline from those
-same stored outputs using the corrected evaluator logic; no model or retrieval
-calls were made. A fresh live evaluation is still required to measure the
-current retrieval implementation, including the recent lightweight reranking
-change.
+These values are from the current implementation and include the lightweight
+retrieval reranker. Three insufficient-evidence cases were unavailable because
+Groq rate limits were reached during answer generation; no scores were
+fabricated for them. The benchmark remains a small 24-case, single-chapter
+evaluation, and LLM-judge values are automated judgments rather than human
+evaluation.
 
 These are local evaluation results for the current Chapter 1 benchmark, not
 claims about the entire CBSE curriculum. The benchmark has 24 structured
@@ -361,6 +392,11 @@ payload using Python's standard `time.perf_counter()`. The stored benchmark
 artifact also contains per-case `latency_ms`, but those values include the
 configured live evaluation path and should not be treated as portable
 performance guarantees.
+
+In a five-query local API smoke test, observed median end-to-end latency was
+**4.87 seconds/query**. This is a small representative measurement, not a
+production benchmark; latency varies with Groq response time, Qdrant/network
+conditions, and deployment environment.
 
 ### Evaluation limitations
 
@@ -382,7 +418,7 @@ The test suite covers:
 - Evaluation metrics and benchmark provenance
 - Diversified merge ordering, bounds, and deduplication
 
-The current local suite has **43 passing tests**.
+The current local suite has **46 passing tests**.
 
 ## Project Structure
 

@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from math import log2
 from typing import Iterable
 
 
@@ -18,13 +19,59 @@ def page_numbers(values: Iterable) -> set[int]:
 
 
 def hit_at_k(retrieved_pages: list[int], expected_pages: list[int], k: int) -> bool:
-    return bool(set(retrieved_pages[:k]) & set(expected_pages))
+    return bool(set(unique_pages(retrieved_pages, k)) & set(expected_pages))
 
 
 def recall_at_k(retrieved_pages: list[int], expected_pages: list[int], k: int) -> float | None:
     if not expected_pages:
         return None
-    return len(set(retrieved_pages[:k]) & set(expected_pages)) / len(set(expected_pages))
+    return len(set(unique_pages(retrieved_pages, k)) & set(expected_pages)) / len(set(expected_pages))
+
+
+def unique_pages(retrieved_pages: Iterable[int], k: int | None = None) -> list[int]:
+    pages = []
+    seen = set()
+    values = list(retrieved_pages)
+    if k is not None:
+        values = values[:k]
+    for page in values:
+        if page in seen:
+            continue
+        seen.add(page)
+        pages.append(page)
+    return pages
+
+
+def precision_at_k(retrieved_pages: list[int], expected_pages: list[int], k: int) -> float | None:
+    if not expected_pages or k <= 0:
+        return None
+    relevant = len(set(unique_pages(retrieved_pages, k)) & set(expected_pages))
+    return relevant / k
+
+
+def reciprocal_rank(retrieved_pages: list[int], expected_pages: list[int]) -> float | None:
+    if not expected_pages:
+        return None
+    expected = set(expected_pages)
+    for rank, page in enumerate(unique_pages(retrieved_pages), start=1):
+        if page in expected:
+            return 1 / rank
+    return 0.0
+
+
+def ndcg_at_k(retrieved_pages: list[int], expected_pages: list[int], k: int) -> float | None:
+    if not expected_pages or k <= 0:
+        return None
+    expected = set(expected_pages)
+    retrieved = unique_pages(retrieved_pages, k)
+    dcg = sum(
+        1 / log2(rank + 1)
+        for rank, page in enumerate(retrieved, start=1)
+        if page in expected
+    )
+    ideal_count = min(len(expected), k)
+    ideal_dcg = sum(1 / log2(rank + 1) for rank in range(1, ideal_count + 1))
+    return dcg / ideal_dcg if ideal_dcg else 0.0
 
 
 def concept_coverage(expected_concepts: list[str], predicted_subqueries: list[str]) -> float | None:
@@ -68,6 +115,41 @@ def abstention_success(answer: str, expected_insufficient: bool) -> bool | None:
     return "insufficient" in normalized and (
         "evidence" in normalized or "information" in normalized
     )
+
+
+def latency_summary(results: list[dict]) -> dict[str, float | int | None]:
+    values = [
+        item["system"]["latency_ms"]
+        for item in results
+        if isinstance(item.get("system", {}).get("latency_ms"), (int, float))
+    ]
+    if not values:
+        return {
+            "count": 0,
+            "mean_ms": None,
+            "median_ms": None,
+            "p95_ms": None,
+            "min_ms": None,
+            "max_ms": None,
+        }
+    ordered = sorted(values)
+    p95_index = max(0, min(len(ordered) - 1, int((len(ordered) * 0.95) + 0.999999) - 1))
+    return {
+        "count": len(values),
+        "mean_ms": sum(values) / len(values),
+        "median_ms": ordered[len(ordered) // 2] if len(ordered) % 2 else (
+            ordered[len(ordered) // 2 - 1] + ordered[len(ordered) // 2]
+        ) / 2,
+        "p95_ms": ordered[p95_index],
+        "min_ms": min(values),
+        "max_ms": max(values),
+    }
+
+
+def failure_rate(results: list[dict]) -> float | None:
+    if not results:
+        return None
+    return sum(bool(item.get("system", {}).get("error")) for item in results) / len(results)
 
 
 def mean(values: list[float | int]) -> float | None:
