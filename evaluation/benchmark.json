@@ -1,5 +1,357 @@
 [
-  {"question": "What is electric flux?", "relevant_pages": []},
-  {"question": "How is capacitance affected by a dielectric?", "relevant_pages": []},
-  {"question": "Explain the principle behind electromagnetic induction.", "relevant_pages": []}
+  {
+    "id": "direct01",
+    "category": "direct_textbook",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What is the principle of quantization of electric charge?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [8],
+      "source_pages_baseline": [8],
+      "source_pages_reconciled": [5],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p5-0"],
+      "provenance_note": "Baseline page 8 does not contain the quantisation passage in the processed records; page 5 contains Section 1.4.3 and q = ne.",
+      "gold_answer": "Charge on a body is an integral multiple of the elementary charge: q = ne."
+    },
+    "evaluation": {
+      "retrieval_required": true,
+      "answer_required": true,
+      "grounding_required": true,
+      "citation_required": true,
+      "context_required": false,
+      "calculation_required": false,
+      "visual_evidence_required": false
+    }
+  },
+  {
+    "id": "direct02",
+    "category": "direct_textbook",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "According to Coulomb's law, what happens to the force if distance is doubled?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [11],
+      "source_pages_baseline": [11],
+      "source_pages_reconciled": [38],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p38-0"],
+      "provenance_note": "Baseline page 11 is not the strongest processed source for the inverse-square statement; the chapter summary on page 38 states Coulomb's law explicitly.",
+      "gold_answer": "The force becomes one-fourth because it is inversely proportional to the square of distance."
+    },
+    "evaluation": {
+      "retrieval_required": true,
+      "answer_required": true,
+      "grounding_required": true,
+      "citation_required": true,
+      "context_required": false,
+      "calculation_required": false,
+      "visual_evidence_required": false
+    }
+  },
+  {
+    "id": "direct03",
+    "category": "direct_textbook",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What is the electric field inside a uniformly charged thin spherical shell?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [39],
+      "source_pages_baseline": [39],
+      "source_pages_reconciled": [36, 40],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p36-0", "chapter_01_electric_charges_and_fields-p40-0"],
+      "provenance_note": "The processed records state E = 0 inside a uniformly charged thin shell on pages 36 and 40; baseline page 39 is a dipole summary page.",
+      "gold_answer": "The electric field is zero at every point inside the uniformly charged thin spherical shell."
+    },
+    "evaluation": {
+      "retrieval_required": true,
+      "answer_required": true,
+      "grounding_required": true,
+      "citation_required": true,
+      "context_required": false,
+      "calculation_required": false,
+      "visual_evidence_required": false
+    }
+  },
+  {
+    "id": "direct04",
+    "category": "direct_textbook",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What are the components of a gold-leaf electroscope?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [3],
+      "gold_answer": "It has a vertical metal rod, a metal knob at the top, and two thin gold leaves at the bottom."
+    },
+    "evaluation": {
+      "retrieval_required": true,
+      "answer_required": true,
+      "grounding_required": true,
+      "citation_required": true,
+      "context_required": false,
+      "calculation_required": false,
+      "visual_evidence_required": true
+    }
+  },
+  {
+    "id": "direct05",
+    "category": "direct_textbook",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "How do like and unlike electric charges behave?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [],
+      "gold_answer": "Like charges repel and unlike charges attract."
+    },
+    "evaluation": {
+      "retrieval_required": true,
+      "answer_required": true,
+      "grounding_required": true,
+      "citation_required": false,
+      "context_required": false,
+      "calculation_required": false,
+      "visual_evidence_required": false
+    }
+  },
+  {
+    "id": "follow01",
+    "category": "follow_up",
+    "conversation_id": "flux01",
+    "turn": 2,
+    "conversation": [{"role": "user", "content": "What is electric flux?"}, {"role": "assistant", "content": "Electric flux measures electric field passing through a surface."}],
+    "question": "Explain that again.",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "Explain electric flux again.",
+      "source_pages": []
+    },
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": true, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "follow02",
+    "category": "follow_up",
+    "conversation_id": "charge01",
+    "turn": 2,
+    "conversation": [{"role": "user", "content": "What happens when like charges are brought together?"}, {"role": "assistant", "content": "Like charges repel."}],
+    "question": "What about unlike charges?",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "What happens when unlike electric charges are brought together?",
+      "source_pages": [2],
+      "gold_answer": "Unlike charges attract."
+    },
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": true, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "follow03",
+    "category": "follow_up",
+    "conversation_id": "shell01",
+    "turn": 2,
+    "conversation": [{"role": "user", "content": "What is the field inside a charged spherical shell?"}, {"role": "assistant", "content": "It is zero."}],
+    "question": "Why is that the case?",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "Why is the electric field inside a charged spherical shell zero?",
+      "source_pages": [39],
+      "source_pages_baseline": [39],
+      "source_pages_reconciled": [36, 40],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p36-0", "chapter_01_electric_charges_and_fields-p40-0"],
+      "provenance_note": "Follow-up rewrite resolves correctly; processed shell evidence is on pages 36 and 40 rather than baseline page 39."
+    },
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": true, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "multi01",
+    "category": "multi_concept",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "How do the electric field lines of a single positive point charge differ from those of an electric dipole?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": true,
+      "requires_calculation": false,
+      "concepts": ["single positive point charge electric field lines", "electric dipole field lines"],
+      "source_pages": [18, 24],
+      "source_pages_baseline": [18, 24],
+      "source_pages_reconciled": [21],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p21-0"],
+      "provenance_note": "Processed page 21 contains the field-line configurations for a single positive charge and a dipole; baseline pages 18 and 24 do not form the strongest field-line pair.",
+      "gold_answer": "Point-charge lines radiate outward, while dipole lines start at positive charge and end at negative charge."
+    },
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": false, "calculation_required": false, "visual_evidence_required": true}
+  },
+  {
+    "id": "multi02",
+    "category": "multi_concept",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Compare the point-charge and dipole electric field diagrams.",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": true,
+      "requires_calculation": false,
+      "concepts": ["point charge electric field", "electric dipole field"],
+      "source_pages": [18, 24],
+      "source_pages_baseline": [18, 24],
+      "source_pages_reconciled": [21],
+      "source_chunks": ["chapter_01_electric_charges_and_fields-p21-0"],
+      "provenance_note": "The processed field-line illustration is represented on page 21; page 24 is a dipole-field vector derivation rather than the comparative field-line diagram."
+    },
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": false, "calculation_required": false, "visual_evidence_required": true}
+  },
+  {
+    "id": "casual01",
+    "category": "casual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Hi",
+    "expected": {"intent": "casual_chat", "needs_retrieval": false, "should_decompose": false, "requires_calculation": false},
+    "evaluation": {"retrieval_required": false, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "casual02",
+    "category": "casual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Thanks",
+    "expected": {"intent": "casual_chat", "needs_retrieval": false, "should_decompose": false, "requires_calculation": false},
+    "evaluation": {"retrieval_required": false, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "casual03",
+    "category": "casual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Good morning",
+    "expected": {"intent": "casual_chat", "needs_retrieval": false, "should_decompose": false, "requires_calculation": false},
+    "evaluation": {"retrieval_required": false, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "study01",
+    "category": "study_guidance",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "I want to study electric charges and fields.",
+    "expected": {"intent": "study_guidance", "needs_retrieval": false, "should_decompose": false, "requires_calculation": false},
+    "evaluation": {"retrieval_required": false, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "study02",
+    "category": "study_guidance",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Help me make a plan to revise Chapter 1.",
+    "expected": {"intent": "study_guidance", "needs_retrieval": false, "should_decompose": false, "requires_calculation": false},
+    "evaluation": {"retrieval_required": false, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "num01",
+    "category": "numerical",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "A point charge of 2 μC is 3 m away. Calculate the electric field.",
+    "expected": {"intent": "calculation", "needs_retrieval": true, "should_decompose": false, "requires_calculation": true, "source_pages": [11], "calculation": {"formula": "E = k|q|/r²", "inputs": {"q": 0.000002, "r": 3}, "expected_result": 1997.7777777777778, "unit": "N/C"}},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": false, "calculation_required": true, "visual_evidence_required": false}
+  },
+  {
+    "id": "num02",
+    "category": "numerical",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Calculate the electric field for q = 5 μC and r = 2 m.",
+    "expected": {"intent": "calculation", "needs_retrieval": true, "should_decompose": false, "requires_calculation": true, "source_pages": [11], "calculation": {"formula": "E = k|q|/r²", "inputs": {"q": 0.000005, "r": 2}, "expected_result": 11237.5, "unit": "N/C"}},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": false, "calculation_required": true, "visual_evidence_required": false}
+  },
+  {
+    "id": "num03",
+    "category": "numerical",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "A point charge is present but I did not provide its distance.",
+    "expected": {"intent": "calculation", "needs_retrieval": true, "should_decompose": false, "requires_calculation": true, "source_pages": [], "calculation": {"expected_result": null}},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": false, "citation_required": false, "context_required": false, "calculation_required": true, "visual_evidence_required": false}
+  },
+  {
+    "id": "visual01",
+    "category": "visual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Describe the gold-leaf electroscope shown in the textbook diagram.",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [3], "gold_answer": "The diagram shows a metal rod with a knob and two gold leaves in a box."},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": false, "calculation_required": false, "visual_evidence_required": true}
+  },
+  {
+    "id": "visual02",
+    "category": "visual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What does the electric dipole field-line diagram show?",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [24], "source_pages_baseline": [24], "source_pages_reconciled": [21], "source_chunks": ["chapter_01_electric_charges_and_fields-p21-0"], "provenance_note": "Processed page 21 contains the electric field-line configuration description; page 24 covers dipole vector-field derivations."},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": false, "calculation_required": false, "visual_evidence_required": true}
+  },
+  {
+    "id": "visual03",
+    "category": "visual",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What does the point-charge electric-field illustration show?",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [18], "source_pages_baseline": [18], "source_pages_reconciled": [21], "source_chunks": ["chapter_01_electric_charges_and_fields-p21-0"], "provenance_note": "Processed page 21 contains the single-positive-charge field-line illustration; baseline page 18 is an example/calculation page."},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": true, "context_required": false, "calculation_required": false, "visual_evidence_required": true}
+  },
+  {
+    "id": "insufficient01",
+    "category": "insufficient_evidence",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What is the latest population of Mars according to Chapter 1?",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [], "expected_sufficient_evidence": false},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "insufficient02",
+    "category": "insufficient_evidence",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "Explain the quantum mechanics of black-hole evaporation from this textbook.",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [], "expected_sufficient_evidence": false},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  },
+  {
+    "id": "insufficient03",
+    "category": "insufficient_evidence",
+    "conversation_id": null,
+    "turn": 1,
+    "question": "What is the chemical composition of Jupiter's atmosphere in this chapter?",
+    "expected": {"intent": "textbook_question", "needs_retrieval": true, "should_decompose": false, "requires_calculation": false, "source_pages": [], "expected_sufficient_evidence": false},
+    "evaluation": {"retrieval_required": true, "answer_required": true, "grounding_required": true, "citation_required": false, "context_required": false, "calculation_required": false, "visual_evidence_required": false}
+  }
 ]

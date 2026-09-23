@@ -1,11 +1,10 @@
-from dataclasses import asdict
+from typing import Any, List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from src.study_assistant.config import settings
-from src.study_assistant.generation import generate_answer
-from src.study_assistant.retrieval import search
+from src.study_assistant.orchestrator import process_student_query
 from src.study_assistant.store import qdrant_client
 
 
@@ -15,6 +14,7 @@ app = FastAPI(title="Multimodal CBSE Study Assistant")
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1)
     chapter: str | None = None
+    chat_history: List[dict] = Field(default_factory=list)
 
 
 class Source(BaseModel):
@@ -26,7 +26,10 @@ class Source(BaseModel):
 
 class QueryResponse(BaseModel):
     answer: str
-    sources: list[Source]
+    intent: str
+    used_retrieval: bool
+    sources: list[Source] = Field(default_factory=list)
+    debug: dict[str, Any] = Field(default_factory=dict)
 
 
 @app.get("/health")
@@ -41,28 +44,15 @@ def health() -> dict[str, str]:
 @app.post("/query", response_model=QueryResponse)
 def query(request: QueryRequest) -> QueryResponse:
     try:
-        client = qdrant_client(settings.qdrant_url, settings.qdrant_api_key)
-        results = search(
-            client,
-            settings.collection_name,
+        result = process_student_query(
             request.question,
-            settings.embedding_model,
-            settings.top_k,
-        )
-        if request.chapter:
-            results = [
-                result
-                for result in results
-                if request.chapter.lower() in result.source_file.lower()
-            ]
-        answer = generate_answer(
-            request.question,
-            results,
-            settings.groq_api_key,
-            settings.generation_model,
+            request.chat_history,
+            request.chapter,
         )
         return QueryResponse(
-            answer=answer,
+            answer=result["answer"],
+            intent=result["intent"],
+            used_retrieval=result["used_retrieval"],
             sources=[
                 Source(
                     page_number=result.page_start,
@@ -70,8 +60,9 @@ def query(request: QueryRequest) -> QueryResponse:
                     image_path=result.page_image,
                     record_type=result.record_type,
                 )
-                for result in results
+                for result in result["sources"]
             ],
+            debug=result["debug"],
         )
     except (RuntimeError, ValueError) as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc

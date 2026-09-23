@@ -10,4 +10,5 @@ pypdf
 qdrant-client
 sentence-transformers
 streamlit
+tf-keras==2.16.0
 uvicorn
