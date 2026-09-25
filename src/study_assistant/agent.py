@@ -1,7 +1,9 @@
 import json
-from typing import Any
+from typing import Any, Literal
 
-from .groq_retry import call_with_retry
+from pydantic import BaseModel
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_groq import ChatGroq
 
 from .config import settings
 
@@ -13,6 +15,19 @@ INTENTS = {
     "calculation",
     "study_guidance",
 }
+
+
+class RouterIntent(BaseModel):
+    intent: Literal[
+        "casual_chat",
+        "textbook_question",
+        "follow_up_question",
+        "calculation",
+        "study_guidance",
+    ]
+    needs_retrieval: bool
+    standalone_query: str
+    requires_calculation: bool
 MAX_HISTORY_MESSAGES = 8
 MAX_SUBQUERIES = 3
 OBVIOUS_CASUAL_MESSAGES = {
@@ -35,39 +50,55 @@ def _recent_history(history: list[dict[str, Any]]) -> list[dict[str, str]]:
     ]
 
 
-def _groq_json(prompt: str) -> dict[str, Any]:
+def _llm():
     if not settings.groq_api_key:
         raise RuntimeError("GROQ_API_KEY is missing from .env")
-    try:
-        from groq import Groq, RateLimitError
-    except ImportError as exc:
-        raise RuntimeError("groq is required for query analysis") from exc
+    return ChatGroq(
+        api_key=settings.groq_api_key,
+        model=settings.generation_model,
+        temperature=0,
+        max_retries=0,
+    )
 
+
+def _groq_json(prompt: str, structured_model: type[BaseModel] | None = None) -> dict[str, Any]:
+    template = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "Return ONLY the required JSON object. Do not include markdown, "
+                "explanation, or any text outside the JSON.",
+            ),
+            ("user", "{prompt}"),
+        ]
+    )
+    llm = _llm()
+    if structured_model is not None:
+        llm = llm.with_structured_output(structured_model)
+    llm = llm.with_retry(
+        retry_if_exception_type=(ConnectionError, TimeoutError),
+        stop_after_attempt=3,
+        wait_exponential_jitter=False,
+    )
+    runnable = template | llm
     try:
-        response = call_with_retry(
-            lambda: Groq(api_key=settings.groq_api_key).chat.completions.create(
-                model=settings.generation_model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "Return ONLY the required JSON object. Do not include "
-                            "markdown, explanation, or any text outside the JSON."
-                        ),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0,
-                max_completion_tokens=200,
-                response_format={"type": "json_object"},
-            )
-        )
-    except RateLimitError as exc:
-        raise RuntimeError(
-            "Groq rate limit reached while processing the structured query request. "
-            "Please retry later."
-        ) from exc
-    content = response.choices[0].message.content or ""
+        response = runnable.invoke({"prompt": prompt})
+    except Exception as exc:
+        try:
+            from groq import RateLimitError
+        except ImportError:
+            RateLimitError = ()
+        if RateLimitError and isinstance(exc, RateLimitError):
+            raise RuntimeError(
+                "Groq rate limit reached while processing the structured query request. "
+                "Please retry later."
+            ) from exc
+        raise
+    if isinstance(response, BaseModel):
+        return response.model_dump()
+    content = getattr(response, "content", response)
+    if not isinstance(content, str):
+        raise RuntimeError("Query router returned an invalid object")
     try:
         result = json.loads(content)
     except json.JSONDecodeError as exc:
@@ -128,7 +159,7 @@ Recent conversation:
 Latest student message:
 {question}
 """
-    return _validate_route(_groq_json(prompt))
+    return _validate_route(_groq_json(prompt, RouterIntent))
 
 
 def rewrite_query(question: str, chat_history: list[dict]) -> str:
@@ -184,3 +215,8 @@ Retrieval query:
         "decompose": bool(result.get("decompose")) and len(cleaned_queries) > 1,
         "queries": cleaned_queries if bool(result.get("decompose")) else [query.strip()],
     }
+
+
+def route(question: str) -> str:
+    """Return the structured router's intent for a standalone message."""
+    return analyze_query(question, [])["intent"]
