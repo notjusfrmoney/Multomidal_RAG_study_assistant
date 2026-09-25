@@ -153,107 +153,29 @@ def process_student_query(
     chapter: str | None = None,
 ) -> dict[str, Any]:
     started = time.perf_counter()
-    route = analyze_query(question, chat_history)
-    intent = route["intent"]
-    if not route["needs_retrieval"]:
-        return {
-            "answer": _conversational_answer(question, chat_history),
-            "intent": intent,
-            "used_retrieval": False,
-            "sources": [],
-            "debug": _with_latency({
-                "standalone_query": route["standalone_query"],
-                "retrieval_attempts": 0,
-                "calculation_used": False,
-            }, started),
-        }
+    from .graph import graph
 
-    standalone_query = route["standalone_query"]
-    if intent == "follow_up_question":
-        standalone_query = rewrite_query(question, chat_history)
-
-    client = qdrant_client(settings.qdrant_url, settings.qdrant_api_key)
-    results = None
-    evidence = {"sufficient": False, "record_count": 0}
-    retrieval_attempts = 0
-    subqueries = [standalone_query]
-    decomposed = False
-    subquery_record_counts = []
-    for retrieval_attempts in range(1, MAX_RETRIEVAL_ATTEMPTS + 1):
-        decomposition = decompose_query(standalone_query, chat_history)
-        subqueries = decomposition["queries"]
-        decomposed = decomposition["decompose"]
-        record_groups = []
-        for subquery in subqueries:
-            records = search(
-                client,
-                settings.collection_name,
-                subquery,
-                settings.embedding_model,
-                settings.top_k,
-            )
-            if chapter and records:
-                records = [
-                    result
-                    for result in records
-                    if getattr(result, "source_file", "")
-                    and chapter.lower() in result.source_file.lower()
-                ]
-            record_groups.append(records)
-        subquery_record_counts = [len(records or []) for records in record_groups]
-        results = _merge_records(record_groups, settings.top_k)
-        evidence = assess_evidence(results, standalone_query)
-        if evidence["sufficient"]:
-            calculation_result = None
-            calculation_used = False
-            calculation_error = None
-            if intent == "calculation":
-                calculation_result = calculate_electric_field(question)
-                calculation_used = calculation_result["success"]
-                if not calculation_used:
-                    calculation_error = calculation_result["reason"]
-            answer = generate_answer(
-                standalone_query,
-                results,
-                settings.groq_api_key,
-                settings.generation_model,
-                calculation_result if calculation_used else None,
-            )
-            return {
-                "answer": answer,
-                "intent": intent,
-                "used_retrieval": True,
-                "sources": results,
-                "debug": _with_latency({
-                    "standalone_query": standalone_query,
-                    "decomposed": decomposed,
-                    "subqueries": subqueries,
-                    "subquery_record_counts": subquery_record_counts,
-                    "retrieval_attempts": retrieval_attempts,
-                    "evidence_sufficient": True,
-                    "calculation_used": calculation_used,
-                    **({"calculation_error": calculation_error} if calculation_error else {}),
-                }, started),
-            }
-        if retrieval_attempts < MAX_RETRIEVAL_ATTEMPTS:
-            standalone_query = _retry_query(standalone_query)
-
+    result = graph.invoke({
+        "user_message": question,
+        "conversation_history": chat_history,
+        "chapter": chapter,
+        "retry_count": 0,
+    })
+    intent = result.get("intent", "")
+    used_retrieval = intent not in {"casual_chat", "study_guidance"}
+    calculation_result = result.get("calculation_result")
+    debug = {
+        "standalone_query": result.get("rewritten_query", question),
+        "subqueries": result.get("subqueries", []),
+        "decomposed": len(result.get("subqueries", [])) > 1,
+        "retrieval_attempts": 0 if not used_retrieval else result.get("retry_count", 0) + 1,
+        "evidence_sufficient": result.get("evidence_sufficient", False),
+        "calculation_used": bool(calculation_result and calculation_result.get("success")),
+    }
     return {
-        "answer": (
-            "I couldn't find enough relevant information in the textbook to answer "
-            "that confidently. Try rephrasing the question or asking about a "
-            "specific topic from the chapter."
-        ),
+        "answer": result.get("final_answer", ""),
         "intent": intent,
-        "used_retrieval": True,
-        "sources": [],
-        "debug": _with_latency({
-            "standalone_query": standalone_query,
-            "decomposed": decomposed,
-            "subqueries": subqueries,
-            "subquery_record_counts": subquery_record_counts,
-            "retrieval_attempts": retrieval_attempts,
-            "evidence_sufficient": False,
-            "calculation_used": False,
-        }, started),
+        "used_retrieval": used_retrieval,
+        "sources": result.get("sources", []),
+        "debug": _with_latency(debug, started),
     }

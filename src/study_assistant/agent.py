@@ -28,6 +28,15 @@ class RouterIntent(BaseModel):
     needs_retrieval: bool
     standalone_query: str
     requires_calculation: bool
+
+
+class RewriteQuery(BaseModel):
+    standalone_query: str
+
+
+class DecomposedQuery(BaseModel):
+    decompose: bool
+    queries: list[str]
 MAX_HISTORY_MESSAGES = 8
 MAX_SUBQUERIES = 3
 OBVIOUS_CASUAL_MESSAGES = {
@@ -176,7 +185,7 @@ Recent conversation:
 Current question:
 {question}
 """
-    result = _groq_json(prompt)
+    result = _groq_json(prompt, RewriteQuery)
     standalone_query = result.get("standalone_query")
     if not isinstance(standalone_query, str) or not standalone_query.strip():
         raise RuntimeError("Query rewriter returned an invalid query")
@@ -200,7 +209,7 @@ Recent conversation:
 Retrieval query:
 {query}
 """
-    result = _groq_json(prompt)
+    result = _groq_json(prompt, DecomposedQuery)
     queries = result.get("queries")
     if not isinstance(queries, list):
         raise RuntimeError("Query decomposer returned invalid queries")

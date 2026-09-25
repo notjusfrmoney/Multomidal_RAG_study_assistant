@@ -57,7 +57,7 @@ def _evidence_branch(state: StudyAssistantState) -> Literal[
 ]:
     if state.get("evidence_sufficient"):
         return "generate"
-    if state.get("retry_count", 0) < 2:
+    if state.get("retry_count", 0) < 1:
         return "retry"
     return "insufficient"
 
