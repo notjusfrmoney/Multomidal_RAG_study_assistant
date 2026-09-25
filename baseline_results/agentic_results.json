@@ -1,0 +1,2334 @@
+[
+  {
+    "id": "direct01",
+    "category": "direct_textbook",
+    "question": "What is the principle of quantization of electric charge?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        8
+      ],
+      "source_pages_baseline": [
+        8
+      ],
+      "source_pages_reconciled": [
+        5
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p5-0"
+      ],
+      "provenance_note": "Baseline page 8 does not contain the quantisation passage in the processed records; page 5 contains Section 1.4.3 and q = ne.",
+      "gold_answer": "Charge on a body is an integral multiple of the elementary charge: q = ne."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "What is the principle of quantization of electric charge?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What is the principle of quantization of electric charge?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        6,
+        16,
+        41,
+        15,
+        41
+      ],
+      "expected_pages": [
+        5
+      ],
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.0,
+      "mrr": 0.0,
+      "ndcg_at_5": 0.0
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 0,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 53411.31,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the principle of quantization of electric charge is described as a **basic (unexplained) law of nature**.\n\nThe evidence indicates that while charge may appear continuous at the macroscopic level, it is **discrete** at the microscopic level, existing in integer multiples of the elementary charge unit, $e$. The value of this elementary charge is given as $e = 1.6 \\times 10^{-19} \\text{ C}$. The text further notes that this quantization is a fundamental property with no analogous law for the quantization of mass.\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 41 (Point 8)\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 6 (Main Concepts and Equations & Values)",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 0,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "direct02",
+    "category": "direct_textbook",
+    "question": "According to Coulomb's law, what happens to the force if distance is doubled?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        11
+      ],
+      "source_pages_baseline": [
+        11
+      ],
+      "source_pages_reconciled": [
+        38
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p38-0"
+      ],
+      "provenance_note": "Baseline page 11 is not the strongest processed source for the inverse-square statement; the chapter summary on page 38 states Coulomb's law explicitly.",
+      "gold_answer": "The force becomes one-fourth because it is inversely proportional to the square of distance."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "According to Coulomb's law, what happens to the electrostatic force between two charges if the distance between them is doubled?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "According to Coulomb's law, what happens to the electrostatic force between two charges if the distance between them is doubled?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        38,
+        11,
+        9,
+        7,
+        9
+      ],
+      "expected_pages": [
+        38
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_5": 1.0
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 41360.7,
+      "error": null
+    },
+    "generated_answer": "Based on the textbook evidence provided, if the distance between two charges is doubled, the electrostatic force between them becomes **one-fourth (1/4)** of its original value.\n\n**Explanation:**\nAccording to Coulomb’s Law, the mutual electrostatic force ($F$) between two point charges is **inversely proportional to the square of the distance** ($r$) separating them. This relationship is expressed mathematically as:\n\n$$ F \\propto \\frac{1}{r^2} $$\n\nIf the distance $r$ is doubled (i.e., the new distance is $2r$), the new force $F'$ is calculated as:\n\n$$ F' \\propto \\frac{1}{(2r)^2} = \\frac{1}{4r^2} = \\frac{1}{4} \\left( \\frac{1}{r^2} \\right) $$\n\nTherefore, the new force is $\\frac{1}{4}$ of the original force.\n\n**Source:**\n*   **File:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`\n*   **Page 38:** States that the force is \"inversely proportional to the square of the distance $r^2$ separating them.\"\n*   **Page 7:** Provides the mathematical formula $F = k \\frac{q_1 q_2}{r^2}$, confirming the inverse-square dependence.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "direct03",
+    "category": "direct_textbook",
+    "question": "What is the electric field inside a uniformly charged thin spherical shell?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        39
+      ],
+      "source_pages_baseline": [
+        39
+      ],
+      "source_pages_reconciled": [
+        36,
+        40
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p36-0",
+        "chapter_01_electric_charges_and_fields-p40-0"
+      ],
+      "provenance_note": "The processed records state E = 0 inside a uniformly charged thin shell on pages 36 and 40; baseline page 39 is a dipole summary page.",
+      "gold_answer": "The electric field is zero at every point inside the uniformly charged thin spherical shell."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "What is the electric field inside a uniformly charged thin spherical shell?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What is the electric field inside a uniformly charged thin spherical shell?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        35,
+        35,
+        36,
+        40,
+        40
+      ],
+      "expected_pages": [
+        36,
+        40
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 0.5,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.4,
+      "mrr": 0.5,
+      "ndcg_at_5": 0.6934264036172708
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 46560.37,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the electric field inside a uniformly charged thin spherical shell is **zero**.\n\n**Explanation:**\nAccording to the text, for a point $P$ located inside the shell (where the radial distance $r$ is less than the shell's radius $R$), a spherical Gaussian surface is chosen that passes through $P$ and is centered at the shell's center $O$. The text states that this Gaussian surface encloses no charge. Applying Gauss’s Law, the electric flux through this surface is calculated as $E \\times 4\\pi r^2$. Since the enclosed charge is zero, Gauss’s Law gives:\n\n$$E \\times 4\\pi r^2 = 0$$\n\nTherefore, the electric field $E$ must be zero for all points inside the shell ($r < R$). The text notes that this result is a direct consequence of Gauss’s Law and that experimental verification of this zero field confirms the $1/r^2$ dependence in Coulomb’s law.\n\n**Source:**\n*   **File:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`\n*   **Page:** 36 (Derivation and conclusion)\n*   **Page:** 40 (Summary of results)",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "direct04",
+    "category": "direct_textbook",
+    "question": "What are the components of a gold-leaf electroscope?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        3
+      ],
+      "gold_answer": "It has a vertical metal rod, a metal knob at the top, and two thin gold leaves at the bottom."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "What are the components of a gold-leaf electroscope?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What are the components of a gold-leaf electroscope?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        4,
+        3,
+        3,
+        18,
+        23
+      ],
+      "expected_pages": [
+        3
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "mrr": 0.5,
+      "ndcg_at_5": 0.6309297535714575
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 39988.66,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the components of a gold-leaf electroscope are:\n\n1.  **Metal knob** (located at the top)\n2.  **Metal rod** (vertical, housed in a box)\n3.  **Rubber** (acting as an insulator)\n4.  **Glass window**\n5.  **Gold leaves** (two thin leaves attached to the bottom end of the rod)\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 4 (Figure 1.2(a) description lists these specific labeled components).\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 3 (Text confirms it consists of a vertical metal rod in a box with two thin gold leaves, and a metal knob at the top).",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "direct05",
+    "category": "direct_textbook",
+    "question": "How do like and unlike electric charges behave?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [],
+      "gold_answer": "Like charges repel and unlike charges attract."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "How do like and unlike electric charges behave?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "How do like and unlike electric charges behave?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        37,
+        2,
+        4,
+        38,
+        41
+      ],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": null,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 59777.79,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, here is the explanation of how like and unlike electric charges behave:\n\n**Behavior of Charges**\nLike electric charges repel each other, while unlike electric charges attract each other. This behavior is inferred from simple experiments involving frictional electricity.\n\n**Experimental Evidence**\nThe text describes experiments using suspended rods to demonstrate these interactions:\n*   **Like Charges:** Two glass rods (both positive) suspended by silk threads repel each other. Similarly, two plastic rods (both negative) suspended by silk threads also repel each other.\n*   **Unlike Charges:** A glass rod and a plastic rod suspended by silk threads attract each other.\n\n**Source Citation**\n*   **File:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`\n*   **Page 2:** Describes Figure 1.1, which visually and textually confirms that \"like (or) charges repel and unlike charges attract each other,\" detailing the specific rod experiments.\n*   **Page 37:** In the Summary section (Point 2), it explicitly states: \"From simple experiments on frictional electricity, one can infer that there are two types of charges in nature; and that like charges repel and unlike charges attract.\"\n\n**Note on Insufficiency**\nThe provided evidence clearly defines the qualitative behavior (attraction/repulsion) but does not provide the quantitative mathematical formula for the force magnitude in the specific pages cited for the basic behavior (Page 2 and Page 37). However, Page 38 does provide Coulomb’s Law, which quantifies this force, stating that the mutual electrostatic force is proportional to the product of the charges and inversely proportional to the square of the distance.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "follow01",
+    "category": "follow_up",
+    "question": "Explain that again.",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "Explain electric flux again.",
+      "source_pages": []
+    },
+    "routing": {
+      "expected_intent": "follow_up_question",
+      "predicted_intent": "follow_up_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": "Explain electric flux again.",
+      "predicted_standalone_query": "What is electric flux?",
+      "correct": true
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What is electric flux?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        22,
+        23,
+        43,
+        21,
+        23
+      ],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 24865.1,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, **electric flux** ($\\Delta\\phi$) is defined as a quantity proportional to the number of electric field lines crossing a surface area. It depends on the orientation of the surface relative to the electric field.\n\nSpecifically, the flux through a small area element is calculated as the component of the electric field ($\\mathbf{E}$) along the normal to the area element multiplied by the magnitude of the area element ($\\Delta S$). This is mathematically represented by the dot product $\\mathbf{E} \\cdot \\Delta\\mathbf{S}$.\n\nFor a larger surface $S$, the total electric flux ($\\phi$) is the sum of the flux through all small area elements, expressed as:\n$$ \\phi \\simeq \\sum \\mathbf{E} \\cdot \\Delta\\mathbf{S} $$\nThis summation becomes an exact integral in the limit as the area element approaches zero. The unit of electric flux is $\\text{N C}^{-1} \\text{m}^2$.\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 22 (Definition and dependence on orientation)\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 23 (Mathematical definition, unit, and total flux equation)",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": true,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "follow02",
+    "category": "follow_up",
+    "question": "What about unlike charges?",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "What happens when unlike electric charges are brought together?",
+      "source_pages": [
+        2
+      ],
+      "gold_answer": "Unlike charges attract."
+    },
+    "routing": {
+      "expected_intent": "follow_up_question",
+      "predicted_intent": "follow_up_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": "What happens when unlike electric charges are brought together?",
+      "predicted_standalone_query": "What happens when unlike electric charges are brought together?",
+      "correct": true
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What happens when unlike electric charges are brought together?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        3,
+        2,
+        11,
+        4,
+        38
+      ],
+      "expected_pages": [
+        2
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "mrr": 0.5,
+      "ndcg_at_5": 0.6309297535714575
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 61653.31,
+      "error": null
+    },
+    "generated_answer": "When unlike electric charges are brought together, they **attract** each other.\n\n**Evidence:**\n*   **Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 2\n*   **Detail:** The text explicitly states the rules of interaction: \"like charges repel, and unlike charges attract.\" Additionally, Figure 1.1(c) on this page illustrates a glass rod and a plastic rod (representing unlike charges) with an arrow indicating they are \"attracting each other.\"",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": true,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "follow03",
+    "category": "follow_up",
+    "question": "Why is that the case?",
+    "expected": {
+      "intent": "follow_up_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "expected_standalone_query": "Why is the electric field inside a charged spherical shell zero?",
+      "source_pages": [
+        39
+      ],
+      "source_pages_baseline": [
+        39
+      ],
+      "source_pages_reconciled": [
+        36,
+        40
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p36-0",
+        "chapter_01_electric_charges_and_fields-p40-0"
+      ],
+      "provenance_note": "Follow-up rewrite resolves correctly; processed shell evidence is on pages 36 and 40 rather than baseline page 39."
+    },
+    "routing": {
+      "expected_intent": "follow_up_question",
+      "predicted_intent": "follow_up_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": "Why is the electric field inside a charged spherical shell zero?",
+      "predicted_standalone_query": "Why is the electric field inside a charged spherical shell zero?",
+      "correct": true
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "Why is the electric field inside a charged spherical shell zero?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        40,
+        36,
+        35,
+        35,
+        40
+      ],
+      "expected_pages": [
+        36,
+        40
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.6666666666666666,
+      "precision_at_5": 0.4,
+      "mrr": 1.0,
+      "ndcg_at_5": 1.0
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 1,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 26846.72,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the electric field inside a charged spherical shell is zero due to the application of **Gauss’s Law** combined with the **spherical symmetry** of the charge distribution.\n\nHere is the step-by-step physical explanation:\n\n1.  **Spherical Symmetry:** The charge is distributed uniformly on the surface of the shell. Because of this symmetry, the electric field at any point inside the shell must be radial (pointing along the radius vector from the center) and its magnitude depends only on the distance $r$ from the center.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 35.\n\n2.  **Gaussian Surface Selection:** To find the field at a point $P$ inside the shell (where $r < R$), we imagine a spherical Gaussian surface centered at the shell's center $O$ and passing through $P$.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 35.\n\n3.  **Charge Enclosed:** Since the Gaussian surface is inside the shell, it encloses **no charge**. All the charge resides on the surface of the shell at radius $R$, which is outside the Gaussian surface of radius $r$.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 36.\n\n4.  **Application of Gauss’s Law:** Gauss’s Law states that the total electric flux through a closed surface is equal to the enclosed charge divided by $\\epsilon_0$.\n    *   The electric flux through the Gaussian surface is calculated as $E \\times 4\\pi r^2$ (since $E$ is constant in magnitude and parallel to the area vector at every point on the sphere).\n    *   Since the enclosed charge is zero, Gauss’s Law gives:\n        $$E \\times 4\\pi r^2 = 0$$\n    *   Therefore, $E = 0$.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 36.\n\n**Conclusion:**\nThe electric field is zero at all points inside the shell because the Gaussian surface enclosing any interior point contains no net charge, and the symmetry ensures the field is uniform over that surface. The textbook explicitly states: *\"The field is zero at all points inside the shell.\"*\n*   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 40.\n\n**Note on Evidence Sufficiency:**\nThe evidence provided is sufficient to explain *why* the field is zero using Gauss's Law. The text also notes that this result is a direct consequence of Gauss’s Law, which itself follows from Coulomb’s Law, and that experimental verification of this zero field confirms the $1/r^2$ dependence in Coulomb’s Law.\n*   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 36.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": true,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "multi01",
+    "category": "multi_concept",
+    "question": "How do the electric field lines of a single positive point charge differ from those of an electric dipole?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": true,
+      "requires_calculation": false,
+      "concepts": [
+        "single positive point charge electric field lines",
+        "electric dipole field lines"
+      ],
+      "source_pages": [
+        18,
+        24
+      ],
+      "source_pages_baseline": [
+        18,
+        24
+      ],
+      "source_pages_reconciled": [
+        21
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p21-0"
+      ],
+      "provenance_note": "Processed page 21 contains the field-line configurations for a single positive charge and a dipole; baseline pages 18 and 24 do not form the strongest field-line pair.",
+      "gold_answer": "Point-charge lines radiate outward, while dipole lines start at positive charge and end at negative charge."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "How do the electric field lines of a single positive point charge differ from those of an electric dipole?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": true,
+      "predicted": true,
+      "correct": true,
+      "expected_concepts": [
+        "single positive point charge electric field lines",
+        "electric dipole field lines"
+      ],
+      "predicted_subqueries": [
+        "electric field lines of a single positive point charge",
+        "electric field lines of an electric dipole"
+      ],
+      "concept_coverage": 1.0
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        21,
+        21,
+        39,
+        19,
+        24
+      ],
+      "expected_pages": [
+        21
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_5": 1.0
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 53490.39,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the electric field lines of a single positive point charge and an electric dipole differ in their direction, origin/termination, and spatial pattern:\n\n**1. Direction and Pattern**\n*   **Single Positive Point Charge:** The field lines are **radially outward**. The text states that for a single positive charge, the field lines point outwards from the charge. The density of these lines is higher near the charge (indicating a stronger field) and decreases as one moves away, resulting in well-separated lines.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19 (\"The field lines of a single positive charge are radially outward...\"); page 21 (\"The field lines of a single positive charge are radially outward\").\n*   **Electric Dipole:** The field lines originate from the positive charge and terminate at the negative charge. The configuration shows a pattern of **mutual attraction** between the two charges, distinct from the radial symmetry of a single charge.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 21 (\"...those around the configuration of two equal and opposite charges (q, – q), a dipole, show clearly the mutual attraction between the charges.\"); page 21 (Figure 1.14 description: \"lines originating from the positive charge and terminating at the negative charge\").\n\n**2. Origin and Termination**\n*   **Single Positive Point Charge:** Since there is only one charge, the field lines start at the positive charge and extend to **infinity**.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 21 (\"If there is a single charge, they may start or end at infinity.\").\n*   **Electric Dipole:** The field lines start at the positive charge and end at the negative charge. They do not extend to infinity in the same manner as a single isolated charge because they connect the two opposite charges.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 21 (\"Field lines start from positive charges and end at negative charges.\"); page 21 (Figure 1.14 description).\n\n**3. Field Strength Dependence (Contextual Difference)**\nWhile not a direct description of the *lines* themselves, the text notes a fundamental difference in the field strength dependence which influences the line density distribution:\n*   **Single Point Charge:** The electric field decreases as $1/r^2$.\n*   **Electric Dipole:** The electric field decreases as $1/r^3$ at large distances.\n    *   *Source:* `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 39 (\"The 1/r3 dependence of dipole electric fields should be noted in contrast to the 1/r 2 dependence of electric field due to a point charge.\").\n\n**Summary of Differences:**\n| Feature | Single Positive Point Charge | Electric Dipole |\n| :--- | :--- | :--- |\n| **Direction** | Radially outward | From +q to -q (curved lines connecting them) |\n| **Termination** | Ends at infinity | Ends at the negative charge |\n| **Visual Pattern** | Symmetric radial spread | Shows mutual attraction; lines connect the two charges |\n\n**Note on Insufficient Evidence:**\nThe provided text does not explicitly describe the *shape* of the dipole field lines (e.g., that they are curved loops) in the body text, only that they show \"mutual attraction\" and connect the charges. However, the description of Figure 1.14 confirms they originate from the positive and terminate at the negative charge. The text does not provide a detailed mathematical description of the line geometry itself, only the general properties and the field strength dependence.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": 1.0,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "multi02",
+    "category": "multi_concept",
+    "question": "Compare the point-charge and dipole electric field diagrams.",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": true,
+      "requires_calculation": false,
+      "concepts": [
+        "point charge electric field",
+        "electric dipole field"
+      ],
+      "source_pages": [
+        18,
+        24
+      ],
+      "source_pages_baseline": [
+        18,
+        24
+      ],
+      "source_pages_reconciled": [
+        21
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p21-0"
+      ],
+      "provenance_note": "The processed field-line illustration is represented on page 21; page 24 is a dipole-field vector derivation rather than the comparative field-line diagram."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Compare the point-charge and dipole electric field diagrams.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": true,
+      "predicted": true,
+      "correct": true,
+      "expected_concepts": [
+        "point charge electric field",
+        "electric dipole field"
+      ],
+      "predicted_subqueries": [
+        "point-charge electric field diagram",
+        "dipole electric field diagram"
+      ],
+      "concept_coverage": 1.0
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        20,
+        24,
+        16,
+        23,
+        43
+      ],
+      "expected_pages": [
+        21
+      ],
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.0,
+      "mrr": 0.0,
+      "ndcg_at_5": 0.0
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 0,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 42996.22,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, a direct comparison of the **field line diagrams** (visual patterns of lines) for a point charge versus a dipole is **insufficient**. The provided text describes vector diagrams and mathematical derivations, but does not contain a descriptive comparison of the standard field line patterns (e.g., lines radiating outward vs. lines looping from positive to negative).\n\nHowever, the evidence allows for a comparison of the **physical setup and field vector behavior** at specific points:\n\n**1. Point Charge**\n*   **Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 20.\n*   **Description:** Figure 1.13 illustrates electric field lines **radiating from a point charge $q$** at the origin.\n*   **Field Strength:** The density of these lines indicates field strength. The text notes a \"Region of strong field\" near the charge where lines are dense, and a \"Region of weak field\" further away. The number of lines crossing a surface area is proportional to $1/r^2$.\n\n**2. Electric Dipole**\n*   **Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 24.\n*   **Description:** Figure 1.17 contains **vector diagrams** (not field line patterns) illustrating the electric field at large distances ($r \\gg a$).\n    *   **Part (a):** Shows a point $P$ on the **axis** of the dipole (charges $+q$ and $-q$ separated by $2a$). It depicts individual field vectors $\\mathbf{E}_{+q}$ and $\\mathbf{E}_{-q}$ and the dipole moment vector $\\mathbf{p}$.\n    *   **Part (b):** Shows a point $P$ on the **equatorial plane**. It illustrates the **vector addition** of $\\mathbf{E}_{+q}$ and $\\mathbf{E}_{-q}$ to find the net field $\\mathbf{E}$.\n*   **Definition:** A dipole is defined as a pair of equal and opposite charges ($q$ and $-q$) separated by a distance $2a` (page 23).\n\n**Conclusion:**\nThe evidence describes the point charge field as **radiating lines** with density decreasing as $1/r^2$ (Page 20). It describes the dipole field in terms of **vector superposition** at specific geometric locations (axis and equatorial plane) rather than a global field line diagram (Page 24). Therefore, a visual comparison of the \"diagrams\" as typically understood in physics (line patterns) cannot be fully made from this specific evidence.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": 1.0,
+      "calculation_correct": null,
+      "citation_accuracy": 0,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "casual01",
+    "category": "casual",
+    "question": "Hi",
+    "expected": {
+      "intent": "casual_chat",
+      "needs_retrieval": false,
+      "should_decompose": false,
+      "requires_calculation": false
+    },
+    "routing": {
+      "expected_intent": "casual_chat",
+      "predicted_intent": "casual_chat",
+      "intent_correct": true,
+      "expected_needs_retrieval": false,
+      "predicted_needs_retrieval": false,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Hi",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 35442.26,
+      "error": null
+    },
+    "generated_answer": "Hey! How's it going? Ready to tackle some Physics, or just looking for a quick break?",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "casual02",
+    "category": "casual",
+    "question": "Thanks",
+    "expected": {
+      "intent": "casual_chat",
+      "needs_retrieval": false,
+      "should_decompose": false,
+      "requires_calculation": false
+    },
+    "routing": {
+      "expected_intent": "casual_chat",
+      "predicted_intent": "casual_chat",
+      "intent_correct": true,
+      "expected_needs_retrieval": false,
+      "predicted_needs_retrieval": false,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Thanks",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 760.79,
+      "error": null
+    },
+    "generated_answer": "You're welcome! If you have any questions on Physics or need help with your studies, feel free to ask. Good luck!",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "casual03",
+    "category": "casual",
+    "question": "Good morning",
+    "expected": {
+      "intent": "casual_chat",
+      "needs_retrieval": false,
+      "should_decompose": false,
+      "requires_calculation": false
+    },
+    "routing": {
+      "expected_intent": "casual_chat",
+      "predicted_intent": "casual_chat",
+      "intent_correct": true,
+      "expected_needs_retrieval": false,
+      "predicted_needs_retrieval": false,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Good morning",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 1046.91,
+      "error": null
+    },
+    "generated_answer": "Good morning! ☀️ Hope you're feeling refreshed.\n\nAre we diving into some Physics today? Maybe tackling **Electromagnetic Induction** or **Modern Physics**? Let me know what's on your mind!",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "study01",
+    "category": "study_guidance",
+    "question": "I want to study electric charges and fields.",
+    "expected": {
+      "intent": "study_guidance",
+      "needs_retrieval": false,
+      "should_decompose": false,
+      "requires_calculation": false
+    },
+    "routing": {
+      "expected_intent": "study_guidance",
+      "predicted_intent": "study_guidance",
+      "intent_correct": true,
+      "expected_needs_retrieval": false,
+      "predicted_needs_retrieval": true,
+      "decision_correct": false
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "I want to study electric charges and fields.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 4419.22,
+      "error": null
+    },
+    "generated_answer": "That’s a great start! It’s the foundation for almost all of Electrostatics.\n\nHere’s a quick roadmap to keep you on track:\n\n1.  **Coulomb’s Law**: Understand the force between charges ($F = k \\frac{q_1 q_2}{r^2}$).\n2.  **Electric Field**: Visualize it as a vector field ($E = F/q$). Learn how to calculate it for point charges and continuous distributions.\n3.  **Gauss’s Law**: This is the big one. Learn how to use symmetry (spherical, cylindrical, planar) to find fields easily.\n4.  **Electric Dipole**: Know the field and potential on the axial and equatorial lines.\n\n**Pro Tip:** Don’t just memorize formulas. Draw the field lines! They help you visualize direction and strength.\n\nDo you want to start with a specific concept, or do you have a doubt about a particular problem?",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": false,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "study02",
+    "category": "study_guidance",
+    "question": "Help me make a plan to revise Chapter 1.",
+    "expected": {
+      "intent": "study_guidance",
+      "needs_retrieval": false,
+      "should_decompose": false,
+      "requires_calculation": false
+    },
+    "routing": {
+      "expected_intent": "study_guidance",
+      "predicted_intent": "study_guidance",
+      "intent_correct": true,
+      "expected_needs_retrieval": false,
+      "predicted_needs_retrieval": false,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Help me make a plan to revise Chapter 1.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 23893.2,
+      "error": null
+    },
+    "generated_answer": "Sure! Since \"Chapter 1\" varies by textbook (e.g., NCERT, HC Verma, or a specific state board), I’ll assume you’re referring to the most common starting chapter in Class 12 Physics: **Electric Charges and Fields** (NCERT).\n\nIf your Chapter 1 is different (like *Electrostatics* or *Units & Dimensions* in some boards), let me know and I’ll adjust!\n\n### 📚 Quick Revision Plan for **Electric Charges & Fields** (3–4 Hours)\n\n#### ⏱️ Hour 1: Core Concepts & Formulas\n- [ ] **Coulomb’s Law**: Force between two charges, superposition principle.\n- [ ] **Gauss’s Law**: Statement, mathematical form, and applications (infinite line charge, infinite sheet, solid sphere).\n- [ ] **Electric Field**: Definition, field lines, field due to dipole (axial & equatorial).\n- [ ] **Electric Dipole**: Torque, potential energy, stability.\n\n#### ⏱️ Hour 2: Problem Practice\n- Solve 5–7 standard problems:\n  - Force on a charge in a system of multiple charges.\n  - Electric field at a point using superposition.\n  - Applying Gauss’s Law to find field for symmetric charge distributions.\n  - Dipole torque and energy calculations.\n\n#### ⏱️ Hour 3: Quick Recap & Common Mistakes\n- [ ] Review sign conventions (positive/negative charges, field direction).\n- [ ] Check units: Coulomb (C), Newton (N), Volt/meter (V/m).\n- [ ] Re-derive Gauss’s Law from Coulomb’s Law (if time permits).\n- [ ] Note down 3–5 common exam traps (e.g., field inside a conductor = 0).\n\n#### ⏱️ Hour 4 (Optional): Mock Test\n- Attempt 10 MCQs + 2 short-answer questions from past papers.\n- Review mistakes immediately.\n\n### 💡 Pro Tips:\n- **Focus on symmetry**: Gauss’s Law is easiest when symmetry is high (spherical, cylindrical, planar).\n- **Draw diagrams**: Always sketch charge positions and field directions.\n- **Memorize key results**: Field due to dipole on axial/equatorial line, field inside/outside a charged shell.\n\nWant me to generate a **5-question mini-quiz** to test your understanding? Or is your Chapter 1 something else? 😊",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "num01",
+    "category": "numerical",
+    "question": "A point charge of 2 μC is 3 m away. Calculate the electric field.",
+    "expected": {
+      "intent": "calculation",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": true,
+      "source_pages": [
+        11
+      ],
+      "calculation": {
+        "formula": "E = k|q|/r²",
+        "inputs": {
+          "q": 2e-06,
+          "r": 3
+        },
+        "expected_result": 1997.7777777777778,
+        "unit": "N/C"
+      }
+    },
+    "routing": {
+      "expected_intent": "calculation",
+      "predicted_intent": "calculation",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": false,
+      "decision_correct": false
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Calculate the electric field at a distance of 3 m from a point charge of 2 μC.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [
+        11
+      ],
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.0,
+      "mrr": 0.0,
+      "ndcg_at_5": 0.0
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 0,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": true,
+      "expected_result": 1997.7777777777778,
+      "actual_result": 1997.7777777777778
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 27125.75,
+      "error": null
+    },
+    "generated_answer": "Hey! Here is the quick calculation for you.\n\n**Given:**\n*   Charge ($q$) = $2 \\, \\mu\\text{C} = 2 \\times 10^{-6} \\, \\text{C}$\n*   Distance ($r$) = $3 \\, \\text{m}$\n*   Coulomb's constant ($k$) $\\approx 9 \\times 10^9 \\, \\text{N}\\cdot\\text{m}^2/\\text{C}^2$\n\n**Formula:**\n$$E = \\frac{kq}{r^2}$$\n\n**Calculation:**\n$$E = \\frac{(9 \\times 10^9) \\times (2 \\times 10^{-6})}{3^2}$$\n$$E = \\frac{18 \\times 10^3}{9}$$\n$$E = 2 \\times 10^3 \\, \\text{N/C}$$\n\n**Answer:**\nThe electric field is **$2000 \\, \\text{N/C}$** (or $2 \\, \\text{kN/C}$).\n\nLet me know if you need help with the direction or any other part of Electrostatics!",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": false,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": true,
+      "citation_accuracy": 0,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "num02",
+    "category": "numerical",
+    "question": "Calculate the electric field for q = 5 μC and r = 2 m.",
+    "expected": {
+      "intent": "calculation",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": true,
+      "source_pages": [
+        11
+      ],
+      "calculation": {
+        "formula": "E = k|q|/r²",
+        "inputs": {
+          "q": 5e-06,
+          "r": 2
+        },
+        "expected_result": 11237.5,
+        "unit": "N/C"
+      }
+    },
+    "routing": {
+      "expected_intent": "calculation",
+      "predicted_intent": "calculation",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": false,
+      "decision_correct": false
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Calculate the electric field for a charge q = 5 μC at a distance r = 2 m.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [
+        11
+      ],
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.0,
+      "mrr": 0.0,
+      "ndcg_at_5": 0.0
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 0,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": true,
+      "expected_result": 11237.5,
+      "actual_result": 11237.499999999998
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 35166.52,
+      "error": null
+    },
+    "generated_answer": "To calculate the electric field, we use the formula for the electric field due to a point charge:\n\n$$E = \\frac{k |q|}{r^2}$$\n\n**Given:**\n*   Charge $q = 5 \\, \\mu\\text{C} = 5 \\times 10^{-6} \\, \\text{C}$\n*   Distance $r = 2 \\, \\text{m}$\n*   Coulomb's constant $k \\approx 9 \\times 10^9 \\, \\text{N}\\cdot\\text{m}^2/\\text{C}^2$\n\n**Calculation:**\n\n1.  Substitute the values into the formula:\n    $$E = \\frac{(9 \\times 10^9) \\times (5 \\times 10^{-6})}{(2)^2}$$\n\n2.  Simplify the numerator:\n    $$(9 \\times 10^9) \\times (5 \\times 10^{-6}) = 45 \\times 10^3 = 45,000$$\n\n3.  Simplify the denominator:\n    $$2^2 = 4$$\n\n4.  Divide:\n    $$E = \\frac{45,000}{4} = 11,250 \\, \\text{N/C}$$\n\n**Answer:**\nThe electric field is **11,250 N/C** (or $1.125 \\times 10^4$ N/C).",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": false,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": true,
+      "citation_accuracy": 0,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "num03",
+    "category": "numerical",
+    "question": "A point charge is present but I did not provide its distance.",
+    "expected": {
+      "intent": "calculation",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": true,
+      "source_pages": [],
+      "calculation": {
+        "expected_result": null
+      }
+    },
+    "routing": {
+      "expected_intent": "calculation",
+      "predicted_intent": "follow_up_question",
+      "intent_correct": false,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": false,
+      "decision_correct": false
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "A point charge is present but I did not provide its distance.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 25315.82,
+      "error": null
+    },
+    "generated_answer": "That’s a common oversight! In Class 12 Physics (Electrostatics), the distance $r$ is crucial because electric field and potential depend on it (usually as $1/r^2$ or $1/r$).\n\nCould you please provide:\n1. The **magnitude of the charge** ($q$).\n2. The **distance** ($r$) from the point where you want to calculate the field/potential.\n3. What you need to find (Electric Field, Potential, or Force?).\n\nOnce you share these, I can help you solve it!",
+    "metrics": {
+      "intent_correct": false,
+      "retrieval_decision_correct": false,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "visual01",
+    "category": "visual",
+    "question": "Describe the gold-leaf electroscope shown in the textbook diagram.",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        3
+      ],
+      "gold_answer": "The diagram shows a metal rod with a knob and two gold leaves in a box."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "Describe the gold-leaf electroscope shown in the textbook diagram.",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "Describe the gold-leaf electroscope shown in the textbook diagram."
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        3,
+        4,
+        43,
+        18,
+        32
+      ],
+      "expected_pages": [
+        3
+      ],
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_5": 1.0
+    },
+    "answer": {
+      "correctness": 5,
+      "groundedness": 5,
+      "citation_accuracy": 1,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 12185.63,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the gold-leaf electroscope is described as a box-like device used to detect electric charge. Its physical structure consists of the following labeled components:\n\n*   **Metal knob**\n*   **Metal rod** (vertical)\n*   **Rubber** (acting as an insulator)\n*   **Glass window**\n*   **Gold leaves** (two thin leaves located at the bottom)\n\n**Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 4 (Figure 1.2(a)).\n\nThe evidence also notes that when a charged object touches the knob, charge flows to the leaves, causing them to diverge, with the degree of divergence indicating the amount of charge.\n\n**Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 3.",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": 5,
+      "groundedness": 5,
+      "answer_relevancy": 5,
+      "context_relevancy": 5,
+      "citation_completeness": 5,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "visual02",
+    "category": "visual",
+    "question": "What does the electric dipole field-line diagram show?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        24
+      ],
+      "source_pages_baseline": [
+        24
+      ],
+      "source_pages_reconciled": [
+        21
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p21-0"
+      ],
+      "provenance_note": "Processed page 21 contains the electric field-line configuration description; page 24 covers dipole vector-field derivations."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "What does the electric dipole field-line diagram show?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What does the electric dipole field-line diagram show?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        24,
+        16,
+        23,
+        21,
+        24
+      ],
+      "expected_pages": [
+        21
+      ],
+      "hit_at_3": false,
+      "hit_at_5": true,
+      "recall_at_3": 0.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.2,
+      "mrr": 0.25,
+      "ndcg_at_5": 0.43067655807339306
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 1,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 24994.81,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the electric dipole field-line diagram (specifically **Figure 1.14(d)**) shows the following:\n\n*   **Configuration:** It depicts an electric dipole consisting of a positive charge ($+q$) and a negative charge ($-q$).\n*   **Field Line Direction:** The field lines originate from the positive charge and terminate at the negative charge.\n\n**Source:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 21.\n\n*Note: The evidence on page 24 describes Figure 1.17, which illustrates the vector addition of electric fields at specific points (on the axis and equatorial plane) rather than the general field-line pattern shown in Figure 1.14(d).*",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 1,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": true
+    }
+  },
+  {
+    "id": "visual03",
+    "category": "visual",
+    "question": "What does the point-charge electric-field illustration show?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [
+        18
+      ],
+      "source_pages_baseline": [
+        18
+      ],
+      "source_pages_reconciled": [
+        21
+      ],
+      "source_chunks": [
+        "chapter_01_electric_charges_and_fields-p21-0"
+      ],
+      "provenance_note": "Processed page 21 contains the single-positive-charge field-line illustration; baseline page 18 is an example/calculation page."
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": "What does the point-charge electric-field illustration show?",
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": false,
+      "correct": true,
+      "expected_concepts": [],
+      "predicted_subqueries": [
+        "What does the point-charge electric-field illustration show?"
+      ],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [
+        16,
+        19,
+        19,
+        20,
+        21
+      ],
+      "expected_pages": [
+        21
+      ],
+      "hit_at_3": false,
+      "hit_at_5": true,
+      "recall_at_3": 0.0,
+      "recall_at_5": 1.0,
+      "precision_at_3": 0.0,
+      "precision_at_5": 0.2,
+      "mrr": 0.25,
+      "ndcg_at_5": 0.43067655807339306
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": 0,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 1,
+      "used_retrieval": true,
+      "latency_ms": 6325.18,
+      "error": null
+    },
+    "generated_answer": "Based on the provided textbook evidence, the point-charge electric-field illustration (specifically **Figure 1.12**) shows the following:\n\n1.  **Visual Representation:** It depicts a central positive point charge (represented by a blue circle with a \"+\" sign) with twelve black arrows radiating outward in all directions.\n2.  **Direction of Field:** The arrows illustrate that the electric field vectors point radially outward from the positive charge.\n3.  **Magnitude Representation:** The length of the arrows is proportional to the strength of the electric field at each point. Since the electric field magnitude decreases inversely as the square of the distance from the charge, the vectors get shorter as one moves away from the origin.\n4.  **Field Lines:** When the arrows pointing in the same direction are connected, they form field lines. The density of these lines represents the magnitude of the field; the lines are denser (closer together) near the charge where the field is strong, and sparser (well-separated) further away where the field is weaker.\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19 (Description of Figure 1.12 and Section 1.8 text).\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19 (Textual explanation of Figure 1.12).",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": true,
+      "resolution_correct": null,
+      "decomposition_correct": true,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": 0,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": null
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "insufficient01",
+    "category": "insufficient_evidence",
+    "question": "What is the latest population of Mars according to Chapter 1?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [],
+      "expected_sufficient_evidence": false
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": null,
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 6366.13,
+      "error": "Groq rate limit reached while generating the grounded answer. Please retry later."
+    },
+    "generated_answer": "",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": false
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "insufficient02",
+    "category": "insufficient_evidence",
+    "question": "Explain the quantum mechanics of black-hole evaporation from this textbook.",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [],
+      "expected_sufficient_evidence": false
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": null,
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 9499.7,
+      "error": "Groq rate limit reached while generating the grounded answer. Please retry later."
+    },
+    "generated_answer": "",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": false
+    },
+    "overall": {
+      "success": false
+    }
+  },
+  {
+    "id": "insufficient03",
+    "category": "insufficient_evidence",
+    "question": "What is the chemical composition of Jupiter's atmosphere in this chapter?",
+    "expected": {
+      "intent": "textbook_question",
+      "needs_retrieval": true,
+      "should_decompose": false,
+      "requires_calculation": false,
+      "source_pages": [],
+      "expected_sufficient_evidence": false
+    },
+    "routing": {
+      "expected_intent": "textbook_question",
+      "predicted_intent": "textbook_question",
+      "intent_correct": true,
+      "expected_needs_retrieval": true,
+      "predicted_needs_retrieval": true,
+      "decision_correct": true
+    },
+    "query_understanding": {
+      "expected_standalone_query": null,
+      "predicted_standalone_query": null,
+      "correct": null
+    },
+    "decomposition": {
+      "expected": false,
+      "predicted": null,
+      "correct": false,
+      "expected_concepts": [],
+      "predicted_subqueries": [],
+      "concept_coverage": null
+    },
+    "retrieval": {
+      "retrieved_pages": [],
+      "expected_pages": [],
+      "hit_at_3": null,
+      "hit_at_5": null,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "precision_at_3": null,
+      "precision_at_5": null,
+      "mrr": null,
+      "ndcg_at_5": null
+    },
+    "answer": {
+      "correctness": null,
+      "groundedness": null,
+      "citation_accuracy": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null
+    },
+    "calculation": {
+      "used": false,
+      "correct": null,
+      "expected_result": null,
+      "actual_result": null
+    },
+    "system": {
+      "retrieval_attempts": 0,
+      "used_retrieval": false,
+      "latency_ms": 10397.5,
+      "error": "Groq rate limit reached while generating the grounded answer. Please retry later."
+    },
+    "generated_answer": "",
+    "metrics": {
+      "intent_correct": true,
+      "retrieval_decision_correct": true,
+      "retrieval_success": false,
+      "resolution_correct": null,
+      "decomposition_correct": false,
+      "concept_coverage": null,
+      "calculation_correct": null,
+      "citation_accuracy": null,
+      "correctness": null,
+      "groundedness": null,
+      "answer_relevancy": null,
+      "context_relevancy": null,
+      "citation_completeness": null,
+      "abstention_success": false
+    },
+    "overall": {
+      "success": false
+    }
+  }
+]
