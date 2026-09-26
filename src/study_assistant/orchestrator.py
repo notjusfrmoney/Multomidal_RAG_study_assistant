@@ -1,13 +1,14 @@
 import time
 from typing import Any
 
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_groq import ChatGroq
+
 from .agent import analyze_query, decompose_query, rewrite_query
 from .calculator import calculate_electric_field
 from .config import settings
 from .generation import generate_answer
-from .groq_retry import call_with_retry
-from .retrieval import search
-from .store import qdrant_client
+from .retrieval import qdrant_vector_store, search
 
 
 MAX_RETRIEVAL_ATTEMPTS = 2
@@ -118,33 +119,33 @@ def _merge_records(
 def _conversational_answer(question: str, history: list[dict]) -> str:
     if not settings.groq_api_key:
         raise RuntimeError("GROQ_API_KEY is missing from .env")
-    try:
-        from groq import Groq, RateLimitError
-    except ImportError as exc:
-        raise RuntimeError("groq is required for conversational generation") from exc
-
-    try:
-        response = call_with_retry(
-            lambda: Groq(api_key=settings.groq_api_key).chat.completions.create(
-                model=settings.generation_model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a helpful Class 12 Physics study assistant. "
-                        "Answer casual conversation and study guidance briefly and naturally.",
-                    },
-                    *history[-8:],
-                    {"role": "user", "content": question},
-                ],
-                temperature=0.2,
-            )
-        )
-    except RateLimitError as exc:
-        raise RuntimeError(
-            "Groq rate limit reached while generating the conversational response. "
-            "Please retry later."
-        ) from exc
-    return response.choices[0].message.content or ""
+    messages = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are a helpful Class 12 Physics study assistant. "
+                "Answer casual conversation and study guidance briefly and naturally.",
+            ),
+            *[
+                (message.get("role", "user"), message.get("content", ""))
+                for message in history[-8:]
+                if isinstance(message, dict)
+            ],
+            ("user", "{question}"),
+        ]
+    )
+    llm = ChatGroq(
+        api_key=settings.groq_api_key,
+        model=settings.generation_model,
+        temperature=0.2,
+        max_retries=0,
+    ).with_retry(
+        retry_if_exception_type=(ConnectionError, TimeoutError),
+        stop_after_attempt=3,
+        wait_exponential_jitter=False,
+    )
+    response = (messages | llm).invoke({"question": question})
+    return str(response.content or "")
 
 
 def process_student_query(

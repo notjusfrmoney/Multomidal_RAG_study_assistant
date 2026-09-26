@@ -2,6 +2,9 @@ import base64
 import json
 from pathlib import Path
 
+from langchain_core.messages import HumanMessage
+from langchain_groq import ChatGroq
+
 from .config import settings
 
 
@@ -13,16 +16,21 @@ def _image_data_url(image_path: Path) -> str:
 def describe_page(image_path: Path, model_name: str, api_key: str) -> str:
     if not api_key:
         raise RuntimeError("GROQ_API_KEY is missing; page visual descriptions cannot be generated")
-    try:
-        from groq import Groq
-    except ImportError as exc:
-        raise RuntimeError("groq is required for page visual descriptions") from exc
-    response = Groq(api_key=api_key).chat.completions.create(
+    llm = ChatGroq(
+        api_key=api_key,
         model=model_name,
-        messages=[
-            {
-                "role": "user",
-                "content": [
+        temperature=0,
+        max_tokens=300,
+        max_retries=0,
+    ).with_retry(
+        retry_if_exception_type=(ConnectionError, TimeoutError),
+        stop_after_attempt=3,
+        wait_exponential_jitter=False,
+    )
+    response = llm.invoke(
+        [
+            HumanMessage(
+                content=[
                     {
                         "type": "text",
                         "text": (
@@ -32,13 +40,11 @@ def describe_page(image_path: Path, model_name: str, api_key: str) -> str:
                         ),
                     },
                     {"type": "image_url", "image_url": {"url": _image_data_url(image_path)}},
-                ],
-            }
-        ],
-        temperature=0,
-        max_completion_tokens=300,
+                ]
+            )
+        ]
     )
-    return response.choices[0].message.content or ""
+    return str(response.content or "")
 
 
 def describe_pages(document_id: str, image_paths: list[Path], metadata_path: Path) -> dict[str, str]:

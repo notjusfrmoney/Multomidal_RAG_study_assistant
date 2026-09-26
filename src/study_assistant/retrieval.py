@@ -7,6 +7,36 @@ from .embeddings import embed_texts
 from .store import SearchResult
 
 
+class _EmbeddingAdapter(Embeddings):
+    def __init__(self, model_name: str):
+        self.model_name = model_name
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return embed_texts(texts, self.model_name)
+
+    def embed_query(self, text: str) -> list[float]:
+        return embed_texts([text], self.model_name)[0]
+
+
+def qdrant_vector_store(
+    url: str,
+    api_key: str,
+    collection_name: str,
+    model_name: str,
+) -> QdrantVectorStore:
+    if not url:
+        raise RuntimeError("QDRANT_URL is missing from .env")
+    return QdrantVectorStore.from_existing_collection(
+        collection_name=collection_name,
+        embedding=_EmbeddingAdapter(model_name),
+        url=url,
+        api_key=api_key or None,
+        content_payload_key="text",
+        metadata_payload_key="metadata",
+        validate_collection_config=False,
+    )
+
+
 _STOPWORDS = {
     "a",
     "an",
@@ -86,52 +116,18 @@ def search(client, collection_name: str, query: str, model_name: str, top_k: int
     candidate_k = min(max(top_k, 0) * 2, 10)
     if candidate_k == 0:
         return []
-    class _EmbeddingAdapter(Embeddings):
-        def embed_documents(self, texts: list[str]) -> list[list[float]]:
-            return embed_texts(texts, model_name)
-
-        def embed_query(self, text: str) -> list[float]:
-            return embed_texts([text], model_name)[0]
-
-    vector_store = QdrantVectorStore(
-        client=client,
-        collection_name=collection_name,
-        embedding=_EmbeddingAdapter(),
-        content_payload_key="text",
-        metadata_payload_key="metadata",
-        validate_collection_config=False,
-    )
     vector = embed_texts([query], model_name)[0]
-    if hasattr(client, "get_collection"):
-        documents = vector_store.similarity_search_with_score_by_vector(
-            vector,
-            k=candidate_k,
-        )
-    else:
-        points = client.query_points(
-            collection_name=collection_name,
-            query=vector,
-            limit=candidate_k,
-            with_payload=True,
-        ).points
-        documents = [
-            (
-                type("Document", (), {
-                    "page_content": point.payload.get("text", ""),
-                    "metadata": {"_id": point.id},
-                })(),
-                point.score,
-            )
-            for point in points
-        ]
+    documents = client.similarity_search_with_score_by_vector(
+        vector,
+        k=candidate_k,
+    )
     payloads = {}
-    if hasattr(client, "retrieve"):
-        points = client.retrieve(
+    points = client.client.retrieve(
             collection_name=collection_name,
             ids=[document.metadata["_id"] for document, _ in documents],
             with_payload=True,
         )
-        payloads = {str(point.id): point.payload for point in points}
+    payloads = {str(point.id): point.payload for point in points}
     records = [
         SearchResult(
             source_id=str(document.metadata["_id"]),

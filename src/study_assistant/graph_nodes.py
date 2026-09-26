@@ -34,7 +34,12 @@ def decompose_node(state: StudyAssistantState) -> dict[str, Any]:
 
 
 def retrieve_node(state: StudyAssistantState) -> dict[str, Any]:
-    client = _orchestrator.qdrant_client(settings.qdrant_url, settings.qdrant_api_key)
+    client = _orchestrator.qdrant_vector_store(
+        settings.qdrant_url,
+        settings.qdrant_api_key,
+        settings.collection_name,
+        settings.embedding_model,
+    )
     query = state["rewritten_query"]
     subqueries = state.get("subqueries") or [query]
     groups = []

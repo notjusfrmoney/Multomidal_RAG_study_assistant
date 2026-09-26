@@ -4,8 +4,7 @@ from pathlib import Path
 
 from src.study_assistant.config import settings
 from src.study_assistant.generation import generate_answer
-from src.study_assistant.retrieval import search
-from src.study_assistant.store import qdrant_client
+from src.study_assistant.retrieval import qdrant_vector_store, search
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -83,7 +82,12 @@ Generated answer:
 
 def evaluate() -> list[dict]:
     benchmark = load_benchmark()
-    client = qdrant_client(settings.qdrant_url, settings.qdrant_api_key)
+    client = qdrant_vector_store(
+        settings.qdrant_url,
+        settings.qdrant_api_key,
+        settings.collection_name,
+        settings.embedding_model,
+    )
     report = []
     for item in benchmark:
         results = search(client, settings.collection_name, item["question"], settings.embedding_model, 5)
