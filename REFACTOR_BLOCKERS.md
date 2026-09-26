@@ -105,3 +105,28 @@ works with the existing JSON prompt, or adjust the output cap to allow valid
 tool arguments while respecting the Groq quota. Then rerun the full Phase 8
 agentic evaluation and compare overall success and category metrics against
 `baseline_results/agentic_results.json` before proceeding to Phase 9.
+
+## Phase 8 — Resolved after JSON-mode router change (2026-09-26)
+
+### Fix
+
+Changed the router's `with_structured_output(RouterIntent)` call to
+`with_structured_output(RouterIntent, method="json_mode")`. Kept the router
+model's 200-token output cap unchanged.
+
+### Verification
+
+- Five fixed structured-router cases all passed:
+  `casual_chat`, `textbook_question`, `follow_up_question`, `calculation`,
+  and `study_guidance`.
+- `python -m pytest -q`: `46 passed, 2 warnings`.
+- The paced full agentic evaluator completed all 24 cases; its output was
+  redirected outside `data/`.
+- The standard evaluator completed all 5 cases; its output was redirected
+  outside `data/`.
+- Agentic end-to-end success: **20/24 (83.33%)**, compared with baseline
+  **17/24 (70.83%)**; this exceeds the 60.83% minimum.
+- Previously-working category metrics remain non-zero: routing **23/24**,
+  follow-up resolution **3/3**, decomposition **22/24**, calculation **2/2**.
+
+The Phase 8 gate passes. Continue with Phase 9.

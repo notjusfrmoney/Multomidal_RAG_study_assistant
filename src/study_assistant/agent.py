@@ -84,7 +84,7 @@ def _groq_json(prompt: str, structured_model: type[BaseModel] | None = None) -> 
     )
     llm = _llm()
     if structured_model is not None:
-        llm = llm.with_structured_output(structured_model)
+        llm = llm.with_structured_output(structured_model, method="json_mode")
     llm = llm.with_retry(
         retry_if_exception_type=(ConnectionError, TimeoutError),
         stop_after_attempt=3,
