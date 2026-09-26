@@ -1,7 +1,9 @@
-from .citations import build_context
-from .groq_retry import call_with_retry
 from typing import Any
 
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_groq import ChatGroq
+
+from .citations import build_context
 from .store import SearchResult
 
 
@@ -14,10 +16,6 @@ def generate_answer(
 ) -> str:
     if not api_key:
         raise RuntimeError("GROQ_API_KEY is missing from .env")
-    try:
-        from groq import Groq, RateLimitError
-    except ImportError as exc:
-        raise RuntimeError("groq is required for answer generation") from exc
     prompt = f"""Answer the student's question using only the textbook evidence below.
 Explain the physics clearly, cite the source file and page in your answer, and say when the evidence is insufficient.
 
@@ -28,17 +26,28 @@ Textbook evidence:
 """
     if calculation_result:
         prompt += f"\nDeterministic calculation result:\n{calculation_result}\n"
+    llm = ChatGroq(
+        api_key=api_key,
+        model=model_name,
+        temperature=0,
+        max_retries=0,
+    ).with_retry(
+        retry_if_exception_type=(ConnectionError, TimeoutError),
+        stop_after_attempt=3,
+        wait_exponential_jitter=False,
+    )
+    messages = ChatPromptTemplate.from_messages([("user", "{prompt}")])
     try:
-        response = call_with_retry(
-            lambda: Groq(api_key=api_key).chat.completions.create(
-                model=model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0,
-            )
-        )
-    except RateLimitError as exc:
-        raise RuntimeError(
-            "Groq rate limit reached while generating the grounded answer. "
-            "Please retry later."
-        ) from exc
-    return response.choices[0].message.content or ""
+        response = (messages | llm).invoke({"prompt": prompt})
+    except Exception as exc:
+        try:
+            from groq import RateLimitError
+        except ImportError:
+            RateLimitError = ()
+        if RateLimitError and isinstance(exc, RateLimitError):
+            raise RuntimeError(
+                "Groq rate limit reached while generating the grounded answer. "
+                "Please retry later."
+            ) from exc
+        raise
+    return str(response.content or "")

@@ -5,8 +5,7 @@ from src.study_assistant.citations import format_citation
 from src.study_assistant.config import settings
 from src.study_assistant.generation import generate_answer
 from src.study_assistant.ingest import ingest_all
-from src.study_assistant.retrieval import search
-from src.study_assistant.store import qdrant_client
+from src.study_assistant.retrieval import qdrant_vector_store, search
 from scripts.index import index_records
 
 
@@ -21,7 +20,12 @@ def main() -> None:
     print(f"ingestion_records={len(records)}")
     print(f"indexed_records={index_records()}")
 
-    client = qdrant_client(settings.qdrant_url, settings.qdrant_api_key)
+    client = qdrant_vector_store(
+        settings.qdrant_url,
+        settings.qdrant_api_key,
+        settings.collection_name,
+        settings.embedding_model,
+    )
     questions = [
         "What is electric flux?",
         "Explain Gauss's law and its physical meaning.",

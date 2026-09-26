@@ -1,6 +1,8 @@
 # Multimodal CBSE Study Assistant
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
+![LangChain](https://img.shields.io/badge/LangChain-integrations-1C3C3C)
+![LangGraph](https://img.shields.io/badge/LangGraph-orchestration-1C3C3C)
 ![Qdrant](https://img.shields.io/badge/Vector%20DB-Qdrant-8A2BE2)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
 ![Groq](https://img.shields.io/badge/LLM-Groq-F55036)
@@ -33,13 +35,15 @@ the same grounded workflow.
 
 - Textbook-grounded question answering
 - Text and full-page visual/page records in Qdrant
-- Groq-based query routing and grounded answer generation
+- LangGraph orchestration with conditional routing and evidence retries
+- LangChain `ChatGroq`, `HuggingFaceEmbeddings`, and `QdrantVectorStore` integrations
 - Conversation-aware follow-up rewriting
 - Multi-concept query decomposition, bounded to three subqueries
 - Evidence sufficiency checks before answer generation
 - Bounded retrieval retry when evidence is unusable
 - Bounded retries for transient Groq connection/time-out errors
 - Deterministic electric-field calculation for a point charge
+- Custom lexical+dense reranking, round-robin result merge/deduplication, and calculator logic
 - Source-file and page-level evidence in API/UI responses
 - FastAPI `/query` and `/health` endpoints
 - Streamlit student chat interface
@@ -60,28 +64,29 @@ FastAPI /query
    v
 Study Assistant Orchestrator
    |
-   +--> Query router
-   +--> Follow-up rewriter
-   +--> Query decomposer
-   +--> Evidence assessment
-   +--> Deterministic calculator (calculation questions)
-   |
    v
-Independent text/page searches
+LangGraph StateGraph
    |
-   v
-Bounded candidate pool, lightweight reranking,
-round-robin merge and deduplication
+   +--> route
+   +--> rewrite_followup / decompose
+   +--> retrieve
+   +--> rerank_merge
+   +--> evidence_check -- insufficient, retry available --> retrieve
+   +--> calculate / generate
    |
-   v
-Qdrant collection
+LangChain QdrantVectorStore + HuggingFaceEmbeddings
    |
-   v
-Grounded Groq answer generation
+ChatGroq answer generation
    |
    v
 Answer + sources + page images
 ```
+
+The graph state is supplied by the orchestrator for each request; there is no
+graph checkpointer or persistent graph memory. Conversation history is passed
+into request state. LangGraph controls orchestration and conditional edges;
+the lexical+dense reranker, round-robin merge/deduplication, and calculator
+remain custom application logic rather than framework features.
 
 The ingestion path is separate from the online query path:
 
@@ -90,7 +95,7 @@ PDF files
    |
    +--> pypdf page text extraction
    +--> PyMuPDF full-page PNG rendering
-   +--> Groq vision descriptions for each page
+   +--> LangChain ChatGroq vision descriptions for each page
    |
    v
 Text chunks + page records
@@ -120,26 +125,39 @@ figures into separate image records.
 1. Read textbook PDFs from `data/raw`.
 2. Extract page text with `pypdf`.
 3. Render each page as a PNG with PyMuPDF.
-4. Ask the configured Groq vision model to describe page-level visual content.
+4. Ask the configured ChatGroq vision model to describe page-level visual content.
 5. Create overlapping text chunks and one page record per page.
 6. Embed record text with `BAAI/bge-base-en-v1.5`.
 7. Index records in a Qdrant collection.
-8. Route the student's message into an implemented intent.
-9. Rewrite follow-ups and decompose multi-concept questions when needed.
-10. Retrieve the configured top-k records for each search query.
+8. Invoke the compiled LangGraph workflow with the message and conversation history.
+9. Route casual chat/study guidance to generation, calculations through the
+   calculator path, follow-ups through rewriting, and textbook questions
+   through decomposition.
+10. Retrieve the configured top-k records for each search query using
+    LangChain's Qdrant vector store and Hugging Face embedding integration.
 11. Retrieve a bounded candidate pool slightly larger than top-k, then apply
     lightweight reranking using dense similarity plus lexical query-token
     overlap; dense similarity remains dominant and original provenance is
     preserved.
 12. Merge decomposed results round-robin, remove duplicates, and assess evidence.
-13. Retry retrieval once with a normalized textbook-context suffix if evidence
-    is unusable.
+13. If evidence is unusable, retry retrieval once with a normalized
+    textbook-context suffix; otherwise continue to grounded generation.
 14. Generate a grounded response or return an insufficient-evidence response.
 15. Return source metadata and page images through the API/UI.
+
+The lexical+dense reranker, round-robin merge/deduplication, evidence
+assessment, and electric-field calculator are custom application logic, not
+LangChain or LangGraph features.
 
 ## Agentic Query Handling
 
 ### Query routing
+
+LangGraph selects the next node from the structured router's intent. Router,
+follow-up rewriting, decomposition, retrieval, evidence checking, calculation,
+and generation are thin nodes around existing application operations. The
+router uses LangChain `ChatGroq` structured output in JSON mode, constrained
+to the five supported intents.
 
 The router recognizes these intents:
 
@@ -174,9 +192,10 @@ interleaved so one subquery does not fill the entire top-k context.
 ### Evidence checking and retry
 
 Retrieved records are checked for usable text or page-image evidence. The
-orchestrator allows a maximum of two retrieval attempts. If usable evidence
-still cannot be obtained, it returns an explicit insufficient-evidence answer
-instead of pretending that the textbook supports the response.
+LangGraph evidence-check edge allows a maximum of two retrieval attempts. If
+usable evidence still cannot be obtained, the graph returns an explicit
+insufficient-evidence answer instead of pretending that the textbook supports
+the response.
 
 Main Groq calls also retry transient connection/time-out failures at most twice
 with short backoff. Rate-limit errors remain explicit failures.

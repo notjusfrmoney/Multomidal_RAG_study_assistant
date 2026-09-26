@@ -92,7 +92,7 @@ def test_casual_orchestration_skips_qdrant():
             "src.study_assistant.orchestrator._conversational_answer",
             return_value="Hello! What would you like to study?",
         ),
-        patch("src.study_assistant.orchestrator.qdrant_client") as qdrant,
+        patch("src.study_assistant.orchestrator.qdrant_vector_store") as qdrant,
     ):
         result = process_student_query("Hi", [])
 
@@ -114,7 +114,7 @@ def test_textbook_orchestration_uses_retrieval_and_generation():
                 "requires_calculation": False,
             },
         ),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch(
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["What is electric flux?"]},
@@ -146,7 +146,7 @@ def test_empty_first_retrieval_retries_and_generates_once():
     record = SearchResult("id", "text", 0.9, "Electric flux evidence.", 1, 1)
     with (
         patch("src.study_assistant.orchestrator.analyze_query", return_value=_textbook_route()),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch(
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["What is electric flux?"]},
@@ -165,7 +165,7 @@ def test_empty_first_retrieval_retries_and_generates_once():
 def test_two_empty_retrievals_return_insufficient_evidence_without_generation():
     with (
         patch("src.study_assistant.orchestrator.analyze_query", return_value=_textbook_route()),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch(
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["What is electric flux?"]},
@@ -185,7 +185,7 @@ def test_two_empty_retrievals_return_insufficient_evidence_without_generation():
 def test_malformed_records_are_treated_as_insufficient():
     with (
         patch("src.study_assistant.orchestrator.analyze_query", return_value=_textbook_route()),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch(
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["What is electric flux?"]},
@@ -207,7 +207,7 @@ def test_comparison_decomposes_and_merges_duplicate_records():
     dipole = SearchResult("dipole", "page", 0.8, "Dipole evidence.", 24, 24)
     with (
         patch("src.study_assistant.orchestrator.analyze_query", return_value=_textbook_route()),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch(
             "src.study_assistant.orchestrator.decompose_query",
             return_value={
@@ -251,7 +251,7 @@ def test_follow_up_is_rewritten_before_decomposition():
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": True, "queries": ["electric flux", "electric field"]},
         ),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch("src.study_assistant.orchestrator.search", return_value=[record]),
         patch("src.study_assistant.orchestrator.generate_answer", return_value="Answer"),
     ):
@@ -273,7 +273,7 @@ def test_calculation_uses_deterministic_result_in_generation():
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["Calculate electric field"]},
         ),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch("src.study_assistant.orchestrator.search", return_value=[record]),
         patch("src.study_assistant.orchestrator.generate_answer", return_value="Answer") as generate,
     ):
@@ -294,7 +294,7 @@ def test_conceptual_question_does_not_use_calculator():
             "src.study_assistant.orchestrator.decompose_query",
             return_value={"decompose": False, "queries": ["What is electric flux?"]},
         ),
-        patch("src.study_assistant.orchestrator.qdrant_client", return_value="client"),
+        patch("src.study_assistant.orchestrator.qdrant_vector_store", return_value="client"),
         patch("src.study_assistant.orchestrator.search", return_value=[record]),
         patch("src.study_assistant.orchestrator.calculate_electric_field") as calculator,
         patch("src.study_assistant.orchestrator.generate_answer", return_value="Answer"),

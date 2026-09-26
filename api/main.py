@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 from src.study_assistant.config import settings
 from src.study_assistant.orchestrator import process_student_query
-from src.study_assistant.store import qdrant_client
+from src.study_assistant.retrieval import qdrant_vector_store
 
 
 app = FastAPI(title="Multimodal CBSE Study Assistant")
@@ -35,7 +35,12 @@ class QueryResponse(BaseModel):
 @app.get("/health")
 def health() -> dict[str, str]:
     try:
-        qdrant_client(settings.qdrant_url, settings.qdrant_api_key).get_collections()
+        qdrant_vector_store(
+            settings.qdrant_url,
+            settings.qdrant_api_key,
+            settings.collection_name,
+            settings.embedding_model,
+        ).client.get_collections()
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Qdrant unavailable: {exc}") from exc
     return {"status": "healthy"}

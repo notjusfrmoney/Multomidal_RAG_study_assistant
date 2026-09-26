@@ -115,13 +115,29 @@ def test_search_uses_bounded_candidate_pool_before_reranking(monkeypatch):
         def __init__(self):
             self.limit = None
 
-        def query_points(self, **kwargs):
-            self.limit = kwargs["limit"]
-            return SimpleNamespace(points=points)
+        def retrieve(self, **kwargs):
+            return points
+
+    class VectorStore:
+        def __init__(self):
+            self.client = Client()
+
+        def similarity_search_with_score_by_vector(self, vector, k):
+            self.client.limit = k
+            return [
+                (
+                    SimpleNamespace(
+                        page_content=point.payload["text"],
+                        metadata={"_id": point.id},
+                    ),
+                    point.score,
+                )
+                for point in points[:k]
+            ]
 
     monkeypatch.setattr(retrieval, "embed_texts", lambda texts, model: [[0.1]])
-    client = Client()
+    client = VectorStore()
     results = retrieval.search(client, "collection", "electric field", "model", top_k=5)
 
-    assert client.limit == 10
+    assert client.client.limit == 10
     assert len(results) == 5

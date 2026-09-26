@@ -1,7 +1,40 @@
 import re
 
+from langchain_core.embeddings import Embeddings
+from langchain_qdrant import QdrantVectorStore
+
 from .embeddings import embed_texts
 from .store import SearchResult
+
+
+class _EmbeddingAdapter(Embeddings):
+    def __init__(self, model_name: str):
+        self.model_name = model_name
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return embed_texts(texts, self.model_name)
+
+    def embed_query(self, text: str) -> list[float]:
+        return embed_texts([text], self.model_name)[0]
+
+
+def qdrant_vector_store(
+    url: str,
+    api_key: str,
+    collection_name: str,
+    model_name: str,
+) -> QdrantVectorStore:
+    if not url:
+        raise RuntimeError("QDRANT_URL is missing from .env")
+    return QdrantVectorStore.from_existing_collection(
+        collection_name=collection_name,
+        embedding=_EmbeddingAdapter(model_name),
+        url=url,
+        api_key=api_key or None,
+        content_payload_key="text",
+        metadata_payload_key="metadata",
+        validate_collection_config=False,
+    )
 
 
 _STOPWORDS = {
@@ -84,23 +117,28 @@ def search(client, collection_name: str, query: str, model_name: str, top_k: int
     if candidate_k == 0:
         return []
     vector = embed_texts([query], model_name)[0]
-    points = client.query_points(
-        collection_name=collection_name,
-        query=vector,
-        limit=candidate_k,
-        with_payload=True,
-    ).points
+    documents = client.similarity_search_with_score_by_vector(
+        vector,
+        k=candidate_k,
+    )
+    payloads = {}
+    points = client.client.retrieve(
+            collection_name=collection_name,
+            ids=[document.metadata["_id"] for document, _ in documents],
+            with_payload=True,
+        )
+    payloads = {str(point.id): point.payload for point in points}
     records = [
         SearchResult(
-            source_id=str(point.id),
-            record_type=point.payload.get("record_type", "text"),
-            score=float(point.score),
-            text=point.payload.get("text", ""),
-            page_start=int(point.payload.get("page_start", 0)),
-            page_end=int(point.payload.get("page_end", 0)),
-            page_image=point.payload.get("page_image"),
-            source_file=point.payload.get("source_file", ""),
+            source_id=str(document.metadata["_id"]),
+            record_type=payloads.get(str(document.metadata["_id"]), {}).get("record_type", "text"),
+            score=float(score),
+            text=payloads.get(str(document.metadata["_id"]), {}).get("text", document.page_content),
+            page_start=int(payloads.get(str(document.metadata["_id"]), {}).get("page_start", 0)),
+            page_end=int(payloads.get(str(document.metadata["_id"]), {}).get("page_end", 0)),
+            page_image=payloads.get(str(document.metadata["_id"]), {}).get("page_image"),
+            source_file=payloads.get(str(document.metadata["_id"]), {}).get("source_file", ""),
         )
-        for point in points
+        for document, score in documents
     ]
     return rerank_results(query, records, top_k)

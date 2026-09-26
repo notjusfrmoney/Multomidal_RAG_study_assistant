@@ -1,0 +1,328 @@
+[
+  {
+    "question": "What is the principle of quantization of electric charge?",
+    "gold_answer": "The quantization of electric charge states that all free charges are integral multiples of a basic unit of charge denoted by e. Therefore, the charge q on a body is always given by q = ne, where n is any integer.",
+    "gold_sources": [
+      "page 8"
+    ],
+    "retrieved_pages": [
+      6,
+      5,
+      5,
+      37,
+      16
+    ],
+    "retrieved_records": [
+      {
+        "source_id": "1ee836a6-1bad-c531-ce94-0caf9c2be2d0",
+        "record_type": "page",
+        "score": 0.8057627,
+        "page_start": 6,
+        "page_end": 6,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p6.png"
+      },
+      {
+        "source_id": "bc012580-3ada-2bce-77cc-eda9fc6cdb55",
+        "record_type": "page",
+        "score": 0.7915811,
+        "page_start": 5,
+        "page_end": 5,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p5.png"
+      },
+      {
+        "source_id": "20e215ab-4e59-286a-fee8-ab7efb8344f6",
+        "record_type": "text",
+        "score": 0.7633976,
+        "page_start": 5,
+        "page_end": 5,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "53034fbb-af22-824a-101b-3212c0c93d7a",
+        "record_type": "text",
+        "score": 0.746047,
+        "page_start": 37,
+        "page_end": 37,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "10021548-2122-157e-e0d6-4dd1270f14f3",
+        "record_type": "page",
+        "score": 0.73387074,
+        "page_start": 16,
+        "page_end": 16,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p16.png"
+      }
+    ],
+    "generated_answer": "Based on the provided textbook evidence, the principle of quantization of electric charge states that electric charge is not continuous but exists in discrete packets. Specifically, the total charge ($q$) on any body is always an integral multiple of a basic unit of charge, denoted by $e$. This relationship is expressed by the equation:\n\n$$q = ne$$\n\nwhere $n$ is any integer (positive, negative, or zero). The basic unit of charge $e$ is the magnitude of the charge carried by an electron or a proton. By convention, the charge on an electron is $-e$ and the charge on a proton is $+e$. The numerical value of this elementary charge is $e = 1.602192 \\times 10^{-19} \\text{ C}$.\n\nWhile charge appears continuous at the macroscopic level because the number of elementary charges involved is very large, it is discrete at the microscopic level. This principle was first suggested by Faraday based on the laws of electrolysis and experimentally demonstrated by Millikan in 1912.\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 5 (Section 1.4.3)\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 37 (Summary Point 4)",
+    "recall_at_5": false,
+    "correctness_score": 5,
+    "groundedness_score": 3
+  },
+  {
+    "question": "Describe the components of a gold-leaf electroscope based on the textbook diagram.",
+    "gold_answer": "A gold-leaf electroscope consists of a vertical metal rod housed in a box. At the top of the rod is a metal knob, and at the bottom are attached two thin gold leaves.",
+    "gold_sources": [
+      "page 3"
+    ],
+    "retrieved_pages": [
+      4,
+      3,
+      37,
+      18,
+      23
+    ],
+    "retrieved_records": [
+      {
+        "source_id": "5821c3c0-3528-9764-e240-34f56f059237",
+        "record_type": "page",
+        "score": 0.78091085,
+        "page_start": 4,
+        "page_end": 4,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p4.png"
+      },
+      {
+        "source_id": "3f87f97c-6030-2bc8-81b0-ab021b24b649",
+        "record_type": "page",
+        "score": 0.75357085,
+        "page_start": 3,
+        "page_end": 3,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p3.png"
+      },
+      {
+        "source_id": "0757a925-d226-9db2-6591-176c64819c27",
+        "record_type": "page",
+        "score": 0.70553416,
+        "page_start": 37,
+        "page_end": 37,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p37.png"
+      },
+      {
+        "source_id": "947361de-74e9-075e-62ed-235d8dcd129d",
+        "record_type": "page",
+        "score": 0.70345825,
+        "page_start": 18,
+        "page_end": 18,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p18.png"
+      },
+      {
+        "source_id": "45c1408e-1f08-042e-44af-5d022cf66754",
+        "record_type": "page",
+        "score": 0.70070046,
+        "page_start": 23,
+        "page_end": 23,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p23.png"
+      }
+    ],
+    "generated_answer": "Based on the textbook evidence provided, the components of a gold-leaf electroscope are described in **Figure 1.2(a)** on **page 4** of the file `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`.\n\nThe labeled components of the gold-leaf electroscope are:\n*   **Metal knob**\n*   **Metal rod**\n*   **Rubber** (identified as an insulator)\n*   **Glass window**\n*   **Gold leaves**\n\nAdditionally, **page 3** of the same file describes the device as consisting of a \"vertical metal rod in a box with two thin gold leaves at the bottom.\"\n\n**Source:**\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 4 (Figure 1.2(a))\n*   `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 3",
+    "recall_at_5": true,
+    "correctness_score": 5,
+    "groundedness_score": 5
+  },
+  {
+    "question": "According to Coulomb's Law, what happens to the force between two point charges if the distance between them is doubled?",
+    "gold_answer": "Coulomb's Law states that the force is inversely proportional to the square of the distance between the charges. Therefore, if the distance is doubled, the force becomes one-fourth of its original value.",
+    "gold_sources": [
+      "page 11"
+    ],
+    "retrieved_pages": [
+      38,
+      9,
+      11,
+      9,
+      7
+    ],
+    "retrieved_records": [
+      {
+        "source_id": "e5637337-d830-6929-2833-c758d698379a",
+        "record_type": "text",
+        "score": 0.7991069,
+        "page_start": 38,
+        "page_end": 38,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "bce9ae34-7e80-2127-7994-94e4ebdca150",
+        "record_type": "page",
+        "score": 0.78122586,
+        "page_start": 9,
+        "page_end": 9,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p9.png"
+      },
+      {
+        "source_id": "23187ec6-f995-4fc1-e3e0-e72c4806553a",
+        "record_type": "text",
+        "score": 0.7807019,
+        "page_start": 11,
+        "page_end": 11,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "2ae73a4b-9b98-f69c-583c-edcaa2402bbf",
+        "record_type": "text",
+        "score": 0.7766714,
+        "page_start": 9,
+        "page_end": 9,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "644cd535-e2e6-8918-8ffd-8aeee5bb8cd2",
+        "record_type": "text",
+        "score": 0.767668,
+        "page_start": 7,
+        "page_end": 7,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      }
+    ],
+    "generated_answer": "Based on the provided textbook evidence, if the distance between two point charges is doubled, the electrostatic force between them becomes **one-fourth (1/4)** of its original value.\n\n**Explanation:**\nAccording to Coulomb’s Law, the magnitude of the force ($F$) between two point charges is inversely proportional to the square of the distance ($r$) separating them. This relationship is expressed mathematically as:\n$$ F \\propto \\frac{1}{r^2} $$\n\nIf the distance $r$ is doubled to become $2r$, the new force $F'$ is proportional to:\n$$ F' \\propto \\frac{1}{(2r)^2} = \\frac{1}{4r^2} $$\n\nTherefore, the new force is $\\frac{1}{4}$ of the original force.\n\n**Source Citation:**\n*   **File:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`\n*   **Page 38:** States that the force is \"inversely proportional to the square of the distance $r^2$ separating them.\"\n*   **Page 7:** Provides the mathematical formula $F = k \\frac{q_1 q_2}{r^2}$ (Eq. 1.1), confirming the inverse-square dependence.\n*   **Page 9:** Explicitly notes that Coulomb’s law has an \"inverse-square dependence on the distance.\"",
+    "recall_at_5": true,
+    "correctness_score": 5,
+    "groundedness_score": 5
+  },
+  {
+    "question": "How do the electric field lines of a single positive point charge differ from those of an electric dipole?",
+    "gold_answer": "For a single positive point charge, the electric field lines point radially outward to infinity. For an electric dipole, the field lines start from the positive charge and end at the negative charge.",
+    "gold_sources": [
+      "page 18",
+      "page 24"
+    ],
+    "retrieved_pages": [
+      19,
+      25,
+      19,
+      39,
+      21
+    ],
+    "retrieved_records": [
+      {
+        "source_id": "1ef150dc-8085-45f2-4704-2b8ddb430dbc",
+        "record_type": "text",
+        "score": 0.79093075,
+        "page_start": 19,
+        "page_end": 19,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "bfb0ce88-c856-3f5a-b00f-7ad19478d30d",
+        "record_type": "text",
+        "score": 0.78484607,
+        "page_start": 25,
+        "page_end": 25,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "0434bdaa-b239-6428-af92-206f912599cd",
+        "record_type": "page",
+        "score": 0.7822363,
+        "page_start": 19,
+        "page_end": 19,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p19.png"
+      },
+      {
+        "source_id": "bffed732-547f-f2f0-dc24-7fe0b416ff6a",
+        "record_type": "text",
+        "score": 0.77317023,
+        "page_start": 39,
+        "page_end": 39,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "3de8e9cb-ab27-796c-f974-0e5eeae5b54d",
+        "record_type": "page",
+        "score": 0.77261883,
+        "page_start": 21,
+        "page_end": 21,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p21.png"
+      }
+    ],
+    "generated_answer": "Based on the provided textbook evidence, the electric field lines of a single positive point charge and an electric dipole differ in their direction, origin/termination, and the rate at which the field strength decreases with distance.\n\n**1. Direction and Origin/Termination**\n*   **Single Positive Point Charge:** The field lines point **radially outward** from the charge. The text states that for a positive point charge, the vectors point \"always pointing radially outward\" and the resulting field lines are \"all pointing outwards from the point charge\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19). Figure 1.14(a) on page 21 also depicts lines radiating outward from a single positive charge.\n*   **Electric Dipole:** The field lines **originate from the positive charge and terminate at the negative charge**. The description of Figure 1.14(d) on page 21 explicitly states that for an electric dipole ($+q, -q$), the lines show \"lines originating from the positive charge and terminating at the negative charge\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 21).\n\n**2. Dependence on Distance (Field Strength)**\n*   **Single Positive Point Charge:** The magnitude of the electric field decreases inversely as the square of the distance ($1/r^2$). The text notes that \"the magnitude of electric field at a point decreases inversely as the square of the distance of that point from the charge\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19). This is reiterated on page 39, which contrasts the $1/r^2$ dependence of a point charge with that of a dipole (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 39).\n*   **Electric Dipole:** The electric field at large distances falls off as $1/r^3$. The text states, \"the dipole field at large distances falls off not as 1/r2 but as 1/r3\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 25). Page 39 confirms this, noting the \"$1/r^3$ dependence of dipole electric fields\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 39).\n\n**3. Density of Field Lines**\n*   **Single Positive Point Charge:** The density of field lines is higher near the charge and lower further away, representing the stronger field near the source. The text explains, \"E is strong near the charge, so the density of field lines is more near the charge... Away from the charge, the field gets weaker and the density of field lines is less\" (Source: `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`, page 19).\n*   **Electric Dipole:** While the specific density distribution for a dipole is not detailed in the provided text snippets beyond the general definition of field lines, the difference in the $1/r^3$ vs $1/r^2$ falloff implies a different spatial distribution of line density compared to the point charge.\n\n**Insufficient Evidence:**\nThe provided text does not explicitly describe the *shape* or *curvature* of the dipole field lines in detail (e.g., that they form closed loops or specific curved paths between the charges), other than stating they originate from the positive and terminate at the negative charge. It also does not provide a direct visual comparison of the line density patterns between the two configurations beyond the general principles.",
+    "recall_at_5": false,
+    "correctness_score": 5,
+    "groundedness_score": 3
+  },
+  {
+    "question": "What is the electric field inside a uniformly charged thin spherical shell?",
+    "gold_answer": "The electric field inside a uniformly charged thin spherical shell is zero at all points.",
+    "gold_sources": [
+      "page 39"
+    ],
+    "retrieved_pages": [
+      35,
+      40,
+      40,
+      35,
+      36
+    ],
+    "retrieved_records": [
+      {
+        "source_id": "99ab1970-556d-04d4-d1a9-ae0b186acef3",
+        "record_type": "page",
+        "score": 0.84289825,
+        "page_start": 35,
+        "page_end": 35,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p35.png"
+      },
+      {
+        "source_id": "8b25cbb7-4eb6-e88a-b61b-b6580d662cfe",
+        "record_type": "text",
+        "score": 0.8280599,
+        "page_start": 40,
+        "page_end": 40,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "c5fe7a7e-d48a-ce20-df2a-9f294a75ed58",
+        "record_type": "page",
+        "score": 0.80768377,
+        "page_start": 40,
+        "page_end": 40,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": "C:\\Users\\91832\\Desktop\\MultiModal_RAG\\data\\pages\\chapter_01_electric_charges_and_fields_p40.png"
+      },
+      {
+        "source_id": "76610414-0d3f-6e92-c6f2-4c6fa8d84549",
+        "record_type": "text",
+        "score": 0.8000198,
+        "page_start": 35,
+        "page_end": 35,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      },
+      {
+        "source_id": "eab7c5f8-dd15-3552-8414-10ed6756908c",
+        "record_type": "text",
+        "score": 0.77244633,
+        "page_start": 36,
+        "page_end": 36,
+        "source_file": "class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf",
+        "page_image": null
+      }
+    ],
+    "generated_answer": "Based on the provided textbook evidence, the electric field inside a uniformly charged thin spherical shell is **zero**.\n\n**Explanation:**\nAccording to the text, for a point $P$ located inside the shell (where the distance from the center $r$ is less than the shell's radius $R$), a spherical Gaussian surface is chosen that passes through $P$ and is centered at the shell's center $O$. Because the Gaussian surface lies entirely within the shell, it encloses no charge. Applying Gauss's Law, the electric flux through this surface is zero, which leads to the conclusion that the electric field magnitude $E$ is zero at all points inside the shell.\n\n**Source:**\n*   **File:** `class_12_physics_part01\\chapter_01_electric_charges_and_fields.pdf`\n*   **Page 36:** States, \"the field due to a uniformly charged thin shell is zero at all points inside the shell\" and provides the equation $E = 0$ for $r < R$ (Eq. 1.35).\n*   **Page 40:** Explicitly lists the result as $\\mathbf{E} = 0$ for $r < R$ and states, \"The field is zero at all points inside the shell.\"",
+    "recall_at_5": false,
+    "correctness_score": 5,
+    "groundedness_score": 5
+  }
+]
