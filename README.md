@@ -4,53 +4,72 @@
 ![LangChain](https://img.shields.io/badge/LangChain-integrations-1C3C3C)
 ![LangGraph](https://img.shields.io/badge/LangGraph-orchestration-1C3C3C)
 ![Qdrant](https://img.shields.io/badge/Vector%20DB-Qdrant-8A2BE2)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
 ![Groq](https://img.shields.io/badge/LLM-Groq-F55036)
 
-A textbook-grounded study assistant for Class 12 Physics. It retrieves
-extracted textbook text together with full-page visual descriptions, then
-generates an answer constrained by the retrieved evidence. The project is a
-small applied RAG system with a FastAPI backend, Streamlit interface, Qdrant
-index, deterministic calculator, and an evaluation suite.
+A textbook-grounded study assistant for Class 12 Physics. It retrieves both extracted textbook text and full-page visual descriptions, then uses the retrieved evidence to answer student questions. The application combines a **FastAPI backend**, **Streamlit interface**, **Qdrant vector database**, **LangGraph workflow**, and a deterministic calculator for a supported numerical question.
 
-## Demo / Overview
+> **Current scope:** The knowledge base contains a Class 12 Physics Chapter 1 vertical slice — **Electric Charges and Fields**. It is not a complete CBSE curriculum index.
 
-Students can ask textbook questions, ask follow-up questions, compare
-concepts, request study guidance, or calculate the electric field of a point
-charge. The response includes the answer and, when retrieval is used, the
-source file, page number, record type, and available textbook page image.
+## Contents
 
-The repository currently contains a Class 12 Physics Chapter 1 vertical slice:
-**Electric Charges and Fields**. It is not a complete CBSE curriculum index.
+- [Application Preview](#application-preview)
+- [What the Project Does](#what-the-project-does)
+- [Architecture](#architecture)
+- [Knowledge Base and Retrieval](#knowledge-base-and-retrieval)
+- [Query Handling](#query-handling)
+- [Numerical Questions](#numerical-questions)
+- [Run the Project](#run-the-project)
+- [Evaluation](#evaluation)
+- [Tests](#tests)
+- [Project Structure](#project-structure)
+- [Configuration and Safety](#configuration-and-safety)
 
-## Problem
+## Application Preview
 
-Text-only retrieval is not enough for textbooks that explain ideas through
-diagrams, equations, graphs, tables, worked examples, and page layout.
-This project keeps both extracted page text and full-page visual evidence in
-the searchable knowledge base so that visual and text-based questions can use
-the same grounded workflow.
+The interface provides a chat-based way to ask questions about the indexed textbook chapter.
 
-## Key Features
+**Study assistant — initial screen**
 
-- Textbook-grounded question answering
-- Text and full-page visual/page records in Qdrant
-- LangGraph orchestration with conditional routing and evidence retries
-- LangChain `ChatGroq`, `HuggingFaceEmbeddings`, and `QdrantVectorStore` integrations
-- Conversation-aware follow-up rewriting
-- Multi-concept query decomposition, bounded to three subqueries
-- Evidence sufficiency checks before answer generation
-- Bounded retrieval retry when evidence is unusable
-- Bounded retries for transient Groq connection/time-out errors
-- Deterministic electric-field calculation for a point charge
-- Custom lexical+dense reranking, round-robin result merge/deduplication, and calculator logic
-- Source-file and page-level evidence in API/UI responses
-- FastAPI `/query` and `/health` endpoints
-- Streamlit student chat interface
-- Dockerfiles and Docker Compose configuration
-- Deterministic tests and two evaluation runners
+![Study Assistant home screen](assets/study-assistant-home.png)
+
+**Example — asking about Coulomb's law**
+
+![Study Assistant answer screen showing a textbook-grounded explanation of Coulomb's law](assets/study-assistant-answer.png)
+
+## What the Project Does
+
+Text-only retrieval can miss information that textbooks communicate through diagrams, equations, graphs, tables, worked examples, and page layout. This project indexes extracted page text alongside descriptions of complete textbook pages, allowing text-based and visual questions to follow the same retrieval workflow.
+
+Students can:
+
+- Ask questions about concepts and explanations in the textbook.
+- Ask follow-up questions using recent conversation context.
+- Compare multiple concepts or textbook topics.
+- Request study guidance.
+- Calculate the electric-field magnitude of a point charge using the supported calculator.
+
+When textbook retrieval is used, the response can include the source file, page number, record type, and available textbook page image.
+
+### Main Features
+
+- Textbook-grounded question answering using text and full-page visual/page records.
+- LangGraph orchestration with intent routing, conditional edges, and evidence checks.
+- LangChain integrations for `ChatGroq`, `HuggingFaceEmbeddings`, and `QdrantVectorStore`.
+- Conversation-aware follow-up rewriting.
+- Multi-concept query decomposition, limited to three subqueries.
+- Evidence sufficiency checks and a bounded retrieval retry.
+- Bounded retries for transient Groq connection and time-out errors.
+- Lightweight lexical-plus-dense reranking and round-robin result merging with deduplication.
+- Deterministic electric-field calculation for a point charge.
+- Page-level source metadata in API and UI responses.
+- FastAPI `/query` and `/health` endpoints, Streamlit UI, and Docker Compose setup.
+- Deterministic tests and two evaluation runners.
 
 ## Architecture
+
+### Online query path
 
 ```text
 Student
@@ -71,95 +90,77 @@ LangGraph StateGraph
    +--> rewrite_followup / decompose
    +--> retrieve
    +--> rerank_merge
-   +--> evidence_check -- insufficient, retry available --> retrieve
+   +--> evidence_check -- retry available --> retrieve
    +--> calculate / generate
    |
+   v
 LangChain QdrantVectorStore + HuggingFaceEmbeddings
    |
+   v
 ChatGroq answer generation
    |
    v
-Answer + sources + page images
+Answer + sources + available page images
 ```
 
-The graph state is supplied by the orchestrator for each request; there is no
-graph checkpointer or persistent graph memory. Conversation history is passed
-into request state. LangGraph controls orchestration and conditional edges;
-the lexical+dense reranker, round-robin merge/deduplication, and calculator
-remain custom application logic rather than framework features.
+The orchestrator supplies the graph state for each request. There is no graph checkpointer or persistent graph memory; recent conversation history is passed into the request state. LangGraph handles orchestration and conditional edges. The lexical+dense reranker, round-robin merge/deduplication, and calculator are custom application logic rather than framework features.
 
-The ingestion path is separate from the online query path:
+### Ingestion path
+
+PDF processing is separate from the online query path:
 
 ```text
-PDF files
+Textbook PDF files
    |
-   +--> pypdf page text extraction
+   +--> pypdf page-text extraction
    +--> PyMuPDF full-page PNG rendering
-   +--> LangChain ChatGroq vision descriptions for each page
+   +--> ChatGroq vision descriptions for each page
    |
    v
-Text chunks + page records
+Text chunks + full-page records
    |
    v
 BAAI/bge-base-en-v1.5 embeddings
    |
    v
-Qdrant
+Qdrant collection
 ```
 
-## Data / Knowledge Base
+## Knowledge Base and Retrieval
 
-The current processed material is the Class 12 Physics chapter
-`chapter_01_electric_charges_and_fields`. Ingestion creates:
+The current processed material is the Class 12 Physics chapter `chapter_01_electric_charges_and_fields`.
 
-- `text` records containing cleaned page-aware text chunks
-- `page` records containing a generated description of the full textbook page
-  and its rendered PNG path
-- Page number, source file, record type, document ID, and chunk ID metadata
+Ingestion creates two record types:
 
-The current ingestion code processes full pages; it does not crop individual
-figures into separate image records.
+- **`text` records:** cleaned, page-aware text chunks.
+- **`page` records:** generated descriptions of complete textbook pages, together with the rendered PNG path.
 
-## RAG Pipeline
+Records retain metadata such as page number, source file, record type, document ID, and chunk ID. The current ingestion code processes complete pages; it does **not** crop individual figures into separate image records.
+
+### Retrieval workflow
 
 1. Read textbook PDFs from `data/raw`.
-2. Extract page text with `pypdf`.
-3. Render each page as a PNG with PyMuPDF.
-4. Ask the configured ChatGroq vision model to describe page-level visual content.
-5. Create overlapping text chunks and one page record per page.
-6. Embed record text with `BAAI/bge-base-en-v1.5`.
-7. Index records in a Qdrant collection.
-8. Invoke the compiled LangGraph workflow with the message and conversation history.
-9. Route casual chat/study guidance to generation, calculations through the
-   calculator path, follow-ups through rewriting, and textbook questions
-   through decomposition.
-10. Retrieve the configured top-k records for each search query using
-    LangChain's Qdrant vector store and Hugging Face embedding integration.
-11. Retrieve a bounded candidate pool slightly larger than top-k, then apply
-    lightweight reranking using dense similarity plus lexical query-token
-    overlap; dense similarity remains dominant and original provenance is
-    preserved.
-12. Merge decomposed results round-robin, remove duplicates, and assess evidence.
-13. If evidence is unusable, retry retrieval once with a normalized
-    textbook-context suffix; otherwise continue to grounded generation.
-14. Generate a grounded response or return an insufficient-evidence response.
-15. Return source metadata and page images through the API/UI.
+2. Extract page text with `pypdf` and render each page as a PNG with PyMuPDF.
+3. Use the configured ChatGroq vision model to describe page-level visual content.
+4. Create overlapping text chunks and one page record per page.
+5. Embed the records with `BAAI/bge-base-en-v1.5` and index them in Qdrant.
+6. Invoke the compiled LangGraph workflow with the user message and conversation history.
+7. Retrieve the configured top-k records for each search query through LangChain's Qdrant vector store and Hugging Face embedding integration.
+8. Retrieve a bounded candidate pool slightly larger than top-k, then rerank it using dense similarity and lightweight lexical query-token overlap. Dense similarity remains dominant, and source/page provenance is preserved.
+9. Merge decomposed-query results round-robin, remove duplicates, and assess whether the evidence is usable.
+10. When evidence is unusable, retry retrieval once with a normalized textbook-context suffix.
+11. Generate an evidence-grounded response or return an explicit insufficient-evidence response.
+12. Return source metadata and available page images through the API and UI.
 
-The lexical+dense reranker, round-robin merge/deduplication, evidence
-assessment, and electric-field calculator are custom application logic, not
-LangChain or LangGraph features.
+The reranker is **not BM25** and does not use a separate reranker model. The reranking, result merge/deduplication, evidence assessment, and electric-field calculator are custom application logic, not LangChain or LangGraph features.
 
-## Agentic Query Handling
+The Streamlit UI displays returned page images when they are available locally.
 
-### Query routing
+## Query Handling
 
-LangGraph selects the next node from the structured router's intent. Router,
-follow-up rewriting, decomposition, retrieval, evidence checking, calculation,
-and generation are thin nodes around existing application operations. The
-router uses LangChain `ChatGroq` structured output in JSON mode, constrained
-to the five supported intents.
+### Intent routing
 
-The router recognizes these intents:
+LangGraph uses a structured router built with LangChain `ChatGroq` JSON-mode output. It selects among five supported intents:
 
 - `casual_chat`
 - `textbook_question`
@@ -167,73 +168,44 @@ The router recognizes these intents:
 - `calculation`
 - `study_guidance`
 
-Obvious greetings and acknowledgements are handled without an LLM router call.
+Obvious greetings and acknowledgements are handled without an LLM router call. Routing, follow-up rewriting, decomposition, retrieval, evidence checking, calculation, and generation are implemented as graph nodes around the application's operations.
 
 ### Follow-up questions
 
-For example:
+Recent conversation history can be used to rewrite a follow-up into a standalone retrieval query. For example:
 
 ```text
 Student: What is electric flux?
 Follow-up: Explain that again.
 ```
 
-Recent conversation history is used to rewrite the follow-up into a standalone
-retrieval query before searching. The router only uses the recent bounded
-history configured in the application; this is not unlimited memory.
+Only the recent, bounded history configured by the application is used; this is not unlimited or persistent memory.
 
-### Query decomposition
+### Multi-concept questions
 
-A multi-concept question can be split into up to three independent retrieval
-queries. For example, a comparison of point-charge and dipole field diagrams
-can produce separate point-charge and dipole searches. Their results are
-interleaved so one subquery does not fill the entire top-k context.
+A question involving multiple concepts can be split into up to three independent retrieval queries. For example, a comparison of point-charge and dipole field diagrams can produce separate searches. Results are interleaved so that one subquery does not occupy the entire top-k context.
 
-### Evidence checking and retry
+### Evidence checks and retries
 
-Retrieved records are checked for usable text or page-image evidence. The
-LangGraph evidence-check edge allows a maximum of two retrieval attempts. If
-usable evidence still cannot be obtained, the graph returns an explicit
-insufficient-evidence answer instead of pretending that the textbook supports
-the response.
+Retrieved records are checked for usable text or page-image evidence. The evidence-check edge allows a maximum of two retrieval attempts. If the evidence is still insufficient, the graph returns an explicit insufficient-evidence response rather than presenting unsupported information as textbook content.
 
-Main Groq calls also retry transient connection/time-out failures at most twice
-with short backoff. Rate-limit errors remain explicit failures.
-
-## Multimodal Retrieval
-
-The index contains extracted text records and full-page visual/page records.
-Visual records describe diagrams, equations, labels, tables, and the main
-concept on a complete textbook page. This supports questions where the useful
-evidence is in page context or a diagram rather than in a clean text-only
-paragraph.
-
-The current system uses full textbook page images, not cropped figure
-retrieval. The Streamlit UI displays returned page images when they are
-available locally.
-
-After dense Qdrant retrieval, the system reranks a small bounded candidate pool
-with the existing semantic score and lightweight lexical query-token overlap;
-semantic similarity remains dominant and source/page provenance is preserved.
-This is not BM25 or a separate reranker model.
+Main Groq calls also retry transient connection and time-out failures at most twice, with short backoff. Rate-limit errors remain explicit failures.
 
 ## Numerical Questions
 
-The deterministic calculator currently supports electric field magnitude for a
-point charge:
+The deterministic calculator currently supports electric-field magnitude for a point charge:
 
 ```text
 E = k |q| / r²
 ```
 
-It parses charge units including `C`, `mC`, `μC`, `µC`, `uC`, and `nC`, and
-distance units including `m`, `cm`, and `km`. It returns a structured success
-or failure result and does not execute arbitrary code or claim to support every
-Physics formula.
+It parses charge units including `C`, `mC`, `μC`, `µC`, `uC`, and `nC`, and distance units including `m`, `cm`, and `km`. It returns a structured success or failure result. It does not execute arbitrary code or claim to support every Physics formula.
 
-## API, UI, and Docker
+## Run the Project
 
-### Local setup
+### 1. Set up the environment
+
+The commands below use Windows PowerShell:
 
 ```powershell
 python -m venv .venv
@@ -242,10 +214,17 @@ python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-Set `GROQ_API_KEY`, `QDRANT_URL`, and `QDRANT_API_KEY` in `.env`. Model,
-collection, and top-k settings can also be configured there.
+Set the following values in `.env`:
 
-### Build the local knowledge base
+```text
+GROQ_API_KEY=your_groq_api_key
+QDRANT_URL=your_qdrant_url
+QDRANT_API_KEY=your_qdrant_api_key
+```
+
+Model, collection, and top-k settings can also be configured there.
+
+### 2. Build the local knowledge base
 
 Place the textbook PDF under `data/raw`, then run:
 
@@ -254,69 +233,50 @@ python scripts\ingest.py --chapter class_12_physics_part01\chapter_01_electric_c
 python scripts\index.py
 ```
 
-The ingestion step writes processed records and page images under `data`.
-Those generated textbook artifacts are local data and are excluded from the
-public repository by `.gitignore`.
+Ingestion writes processed records and page images under `data`. These generated textbook artifacts are local data and are excluded from the public repository by `.gitignore`.
 
-### Run locally
+### 3. Start the application locally
 
-Start the API:
+Start the API in one terminal:
 
 ```powershell
 python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
 
-In another terminal:
+Start the Streamlit interface in another terminal:
 
 ```powershell
 streamlit run app\streamlit_app.py
 ```
 
-The API is available at `http://localhost:8000`; the UI is available at
-`http://localhost:8501`.
+The API is available at `http://localhost:8000` and the UI at `http://localhost:8501`.
 
-### Run with Docker Compose
+### 4. Run with Docker Compose
 
 ```powershell
 docker compose up --build
 ```
 
-Compose starts separate API and UI containers. The UI uses
-`http://api:8000` for its internal API URL.
+Compose starts separate API and UI containers. The UI uses `http://api:8000` as its internal API URL.
 
 ## Evaluation
 
 The project includes two evaluation runners:
 
-- `scripts/evaluate.py` runs the original five-question Chapter 1 benchmark
-  from `data/evaluation/benchmark_chapter_01.json`.
-- `scripts/evaluate_agentic.py` runs the 24-case benchmark in
-  `evaluation/benchmark.json`, covering routing, follow-ups, decomposition,
-  visual questions, calculations, insufficient evidence, citations, and
-  end-to-end success.
+- `scripts/evaluate.py` runs the original five-question Chapter 1 benchmark in `data/evaluation/benchmark_chapter_01.json`.
+- `scripts/evaluate_agentic.py` runs the 24-case benchmark in `evaluation/benchmark.json`. It covers routing, follow-ups, decomposition, visual questions, calculations, insufficient evidence, citations, and end-to-end success.
 
-Run the deterministic test suite:
+Run the deterministic tests and evaluations with:
 
 ```powershell
 python -m pytest -q
-```
-
-Run the baseline evaluation:
-
-```powershell
 python -m scripts.evaluate
-```
-
-Run the agentic evaluation:
-
-```powershell
 python -m scripts.evaluate_agentic
 ```
 
 ### Evaluation methodology
 
-The agentic evaluator uses a **custom repository-local evaluation harness**;
-it does not use RAGAS or DeepEval:
+The agentic evaluator is a **custom repository-local evaluation harness**; it does not use RAGAS or DeepEval.
 
 ```text
 24 benchmark cases
@@ -332,54 +292,42 @@ answer scoring where a reference answer exists
 aggregate metrics
 ```
 
-Retrieval metrics use the cases with expected source pages (13 cases in the
-current run) at page-level granularity. Duplicate records from one page count
-once. Precision@k uses relevant unique pages in the first k divided by k;
-Recall@k divides by the number of expected pages; Hit@k checks whether any
-expected page appears. MRR is reciprocal rank of the first relevant unique
-page, and nDCG@5 uses binary page relevance and unique-page ranks. Context
-Precision and Context Recall are explicitly labeled page-level context
-proxies, not semantic context judgments. Citation Accuracy checks whether an
-expected page is cited. Follow-up Resolution and Contextual Retrieval Success
-use the 3 follow-up cases.
+Retrieval metrics use the 13 cases with expected source pages and are calculated at page level. Duplicate records from the same page count once. Precision@k uses relevant unique pages in the first k divided by k; Recall@k divides by the number of expected pages; Hit@k checks whether any expected page appears. MRR is the reciprocal rank of the first relevant unique page, and nDCG@5 uses binary page relevance and unique-page ranks.
 
-Correctness and Groundedness are LLM-judge scores from 1 to 5, averaged only
-for the 8 completed cases in the current run that contain a reference answer. They are
-not scores for all 24 cases. End-to-End Success is a case-level boolean over
-all 24 cases and includes routing, retrieval, abstention, calculation,
-decomposition, answer, and citation requirements where applicable.
+Context Precision and Context Recall are page-level context proxies, not semantic context judgments. Citation Accuracy checks whether an expected page is cited. Follow-up Resolution and Contextual Retrieval Success use the three follow-up cases.
 
-The current custom harness reports the following values from the latest live
-run using the current code. The artifact contains 24 records: 21 completed
-cases and 3 unavailable cases after Groq rate-limit failures. Values are not
-filled for unavailable cases.
+Correctness and Groundedness are LLM-judge scores from 1 to 5, averaged only over the eight completed cases in the current run that contain a reference answer. They are not scores for all 24 cases. End-to-End Success is a case-level boolean over all 24 cases and includes routing, retrieval, abstention, calculation, decomposition, answer, and citation requirements where applicable.
 
-| Category | Metric | Result | Scope |
+### Latest recorded results
+
+The table below reproduces the values from the current-code live run. The artifact contains 24 records: 21 completed cases and three unavailable cases after Groq rate-limit failures. Unavailable cases do not receive metric scores.
+
+| Category | Metric | Result | Evaluation scope |
 |---|---|---:|---|
-| Retrieval | Precision@3 | 20.5% | 13 page-grounded cases; current run |
-| Retrieval | Precision@5 | 16.9% | 13 page-grounded cases; current run |
-| Retrieval | Recall@3 | 50.0% | 13 page-grounded cases; current run |
-| Retrieval | Recall@5 | 69.2% | 13 page-grounded cases; current run |
-| Retrieval | Hit@3 | 53.8% | 13 page-grounded cases; current run |
-| Retrieval | Hit@5 | 69.2% | 13 page-grounded cases; current run |
-| Retrieval | MRR | 46.2% | 13 page-grounded cases; current run |
-| Retrieval | nDCG@5 | 52.4% | 13 page-grounded cases; current run |
-| RAG Context | Context Precision | 16.9% | 13 page-level context proxies; current run |
-| RAG Context | Context Recall | 69.2% | 13 page-level context proxies; current run |
-| RAG Context | Context Relevancy | 5.00 / 5 | 8 completed LLM-judge cases |
+| Retrieval | Precision@3 | 20.5% | 13 page-grounded cases |
+| Retrieval | Precision@5 | 16.9% | 13 page-grounded cases |
+| Retrieval | Recall@3 | 50.0% | 13 page-grounded cases |
+| Retrieval | Recall@5 | 69.2% | 13 page-grounded cases |
+| Retrieval | Hit@3 | 53.8% | 13 page-grounded cases |
+| Retrieval | Hit@5 | 69.2% | 13 page-grounded cases |
+| Retrieval | MRR | 46.2% | 13 page-grounded cases |
+| Retrieval | nDCG@5 | 52.4% | 13 page-grounded cases |
+| RAG context | Context Precision | 16.9% | 13 page-level context proxies |
+| RAG context | Context Recall | 69.2% | 13 page-level context proxies |
+| RAG context | Context Relevancy | 5.00 / 5 | 8 completed LLM-judge cases |
 | Generation | Answer Correctness | 5.00 / 5 | 8 completed reference-answer cases; LLM judge |
 | Generation | Faithfulness / Groundedness | 5.00 / 5 | 8 completed reference-answer cases; LLM judge |
 | Generation | Answer Relevancy | 5.00 / 5 | 8 completed LLM-judge cases |
-| Citation | Citation Accuracy | 61.5% | 13 expected-page cases; current run |
+| Citation | Citation Accuracy | 61.5% | 13 expected-page cases |
 | Citation | Citation Completeness | 5.00 / 5 | 8 completed LLM-judge cases |
-| Agent | Intent Accuracy | 95.2% | 21 completed cases; current run |
-| Agent | Follow-up Resolution | 100.0% | 3 follow-up cases; current run |
-| Agent | Decomposition Decision Accuracy | 100.0% | 2 multi-concept cases; current run |
-| Agent | Concept Coverage | 100.0% | 2 multi-concept cases; current run |
+| Agent | Intent Accuracy | 95.2% | 21 completed cases |
+| Agent | Follow-up Resolution | 100.0% | 3 follow-up cases |
+| Agent | Decomposition Decision Accuracy | 100.0% | 2 multi-concept cases |
+| Agent | Concept Coverage | 100.0% | 2 multi-concept cases |
 | Agent | Calculation Accuracy | 100.0% | 2 completed numerical cases |
-| Agent | Unsupported-query Abstention Success | unavailable | All 3 insufficient-evidence cases hit rate limits |
+| Agent | Unsupported-query Abstention Success | Unavailable | All 3 insufficient-evidence cases hit rate limits |
 | Agent | End-to-End Success | 70.8% | 17/24 records; unavailable cases count as unsuccessful |
-| Multimodal | Visual Page Retrieval Hit@5 | 83.3% | 6 visual-evidence cases; current run |
+| Multimodal | Visual Page Retrieval Hit@5 | 83.3% | 6 visual-evidence cases |
 | Multimodal | Visual Evidence Groundedness | 5.00 / 5 | 3 visual cases; LLM judge |
 | System | Mean latency | 28.08 s | 24 current-run records |
 | System | Median latency | 26.08 s | 24 current-run records |
@@ -387,55 +335,37 @@ filled for unavailable cases.
 | System | Min / Max latency | 0.76 / 61.65 s | 24 current-run records |
 | System | Query failure rate | 12.5% | 3/24 rate-limit failures |
 
-Unsupported-query abstention success means that, for an insufficient-evidence
-case, the generated answer explicitly states that the available evidence is
-insufficient. Its denominator is the 3 insufficient-evidence cases; it is not
-an unsupported-answer rate.
+Unsupported-query abstention success means that, for an insufficient-evidence case, the generated answer explicitly states that the available evidence is insufficient. Its denominator is the three insufficient-evidence cases; it is not an unsupported-answer rate. That metric is unavailable because all three cases encountered rate limits.
 
-These values are from the current implementation and include the lightweight
-retrieval reranker. Three insufficient-evidence cases were unavailable because
-Groq rate limits were reached during answer generation; no scores were
-fabricated for them. The benchmark remains a small 24-case, single-chapter
-evaluation, and LLM-judge values are automated judgments rather than human
-evaluation.
+These results include the lightweight retrieval reranker. The three insufficient-evidence cases were unavailable because Groq rate limits were reached during answer generation; no scores were imputed for them. LLM-judge values are automated judgments, not human evaluations.
 
-These are local evaluation results for the current Chapter 1 benchmark, not
-claims about the entire CBSE curriculum. The benchmark has 24 structured
-cases, which is useful for validating the current implementation but is too
-small for statistically robust production-level estimates. A larger benchmark
-would be needed for stronger confidence. Detailed reports are written to
-`data/evaluation/results.json` and `data/evaluation/agentic_results.json`.
+The benchmark is a small, 24-case evaluation of one chapter. It is useful for checking the current implementation, but it is too small to support statistically robust or production-wide performance claims. The results are not claims about the full CBSE curriculum. Detailed reports are written to `data/evaluation/results.json` and `data/evaluation/agentic_results.json`.
 
-Each online query now records `total_latency_ms` in the orchestrator debug
-payload using Python's standard `time.perf_counter()`. The stored benchmark
-artifact also contains per-case `latency_ms`, but those values include the
-configured live evaluation path and should not be treated as portable
-performance guarantees.
+### Latency note
 
-In a five-query local API smoke test, observed median end-to-end latency was
-**4.87 seconds/query**. This is a small representative measurement, not a
-production benchmark; latency varies with Groq response time, Qdrant/network
-conditions, and deployment environment.
+Each online query records `total_latency_ms` in the orchestrator debug payload using Python's `time.perf_counter()`. The stored benchmark artifact also contains per-case `latency_ms`; those values include the configured live evaluation path and should not be treated as portable performance guarantees.
+
+In a separate five-query local API smoke test, the observed median end-to-end latency was **4.87 seconds per query**. This is a small local measurement, not a production benchmark. Latency varies with Groq response time, Qdrant/network conditions, and the deployment environment.
 
 ### Evaluation limitations
 
 - The benchmark covers one Class 12 Physics chapter and 24 structured cases.
 - Stored results are a snapshot of one configured run.
 - Correctness and groundedness use an LLM judge, not human evaluation.
+- Three cases in the recorded run were unavailable because of Groq rate limits.
 - Latency depends on Groq, Qdrant, network conditions, and local configuration.
-- A broader multi-chapter benchmark and repeated live runs would be needed
-  for stronger statistical confidence.
+- A broader multi-chapter benchmark and repeated live runs are needed for stronger statistical confidence.
 
 ## Tests
 
 The test suite covers:
 
-- Text cleaning, chunking, IDs, and citations
-- Calculator parsing and deterministic results
-- Query routing, follow-up rewriting, decomposition, and orchestration
-- Transient Groq retry behavior
-- Evaluation metrics and benchmark provenance
-- Diversified merge ordering, bounds, and deduplication
+- Text cleaning, chunking, IDs, and citations.
+- Calculator parsing and deterministic results.
+- Query routing, follow-up rewriting, decomposition, and orchestration.
+- Transient Groq retry behavior.
+- Evaluation metrics and benchmark provenance.
+- Diversified merge ordering, bounds, and deduplication.
 
 The current local suite has **46 passing tests**.
 
@@ -443,26 +373,29 @@ The current local suite has **46 passing tests**.
 
 ```text
 MultiModal_RAG/
-├── api/main.py                    # FastAPI application
-├── app/streamlit_app.py           # Streamlit chat UI
-├── data/                          # Local raw/processed/evaluation data
-├── evaluation/benchmark.json      # Agentic benchmark
+├── api/
+│   └── main.py                     # FastAPI application
+├── app/
+│   └── streamlit_app.py             # Streamlit chat UI
+├── data/                            # Local raw, processed, and evaluation data
+├── evaluation/
+│   └── benchmark.json               # Agentic benchmark
 ├── scripts/
-│   ├── ingest.py                  # PDF ingestion
-│   ├── index.py                   # Qdrant indexing
-│   ├── evaluate.py                # Baseline evaluation
-│   ├── evaluate_agentic.py        # Agentic evaluation
-│   └── smoke_test.py              # Chapter vertical-slice check
+│   ├── ingest.py                    # PDF ingestion
+│   ├── index.py                     # Qdrant indexing
+│   ├── evaluate.py                  # Baseline evaluation
+│   ├── evaluate_agentic.py          # Agentic evaluation
+│   └── smoke_test.py                # Chapter vertical-slice check
 ├── src/study_assistant/
-│   ├── agent.py                   # Routing, rewriting, decomposition
-│   ├── calculator.py              # Electric-field calculator
-│   ├── chunking.py                # Text cleanup and chunk records
-│   ├── embeddings.py              # Sentence-transformer embeddings
-│   ├── generation.py              # Grounded answer generation
-│   ├── ingest.py                  # PDF/text/page processing
-│   ├── orchestrator.py            # End-to-end query workflow
-│   ├── retrieval.py               # Qdrant search
-│   └── visual_understanding.py    # Full-page visual descriptions
+│   ├── agent.py                     # Routing, rewriting, decomposition
+│   ├── calculator.py                # Electric-field calculator
+│   ├── chunking.py                  # Text cleanup and chunk records
+│   ├── embeddings.py                # Sentence-transformer embeddings
+│   ├── generation.py                # Grounded answer generation
+│   ├── ingest.py                    # PDF, text, and page processing
+│   ├── orchestrator.py              # End-to-end query workflow
+│   ├── retrieval.py                 # Qdrant search
+│   └── visual_understanding.py      # Full-page visual descriptions
 ├── tests/
 ├── Dockerfile.api
 ├── Dockerfile.ui
@@ -473,8 +406,6 @@ MultiModal_RAG/
 
 ## Configuration and Safety
 
-Copy `.env.example` to `.env` and keep credentials local. The repository
-expects Groq and Qdrant credentials through environment variables and does not
-store them in source files. Do not commit `.env`, API keys, downloaded
-textbooks, generated page images, processed records, or local evaluation
-artifacts.
+Copy `.env.example` to `.env` and keep credentials local. The application expects Groq and Qdrant credentials through environment variables; credentials should not be stored in source files.
+
+Do not commit `.env`, API keys, downloaded textbooks, generated page images, processed records, or local evaluation artifacts. The generated textbook data is intended to remain local and is excluded from the public repository by `.gitignore`.
